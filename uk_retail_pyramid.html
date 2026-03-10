@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Retail — Organisational Pyramid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-base: #0F0F10;
+    --bg-surface: #151516;
+    --bg-elevated: #1F2023;
+    --bg-elevated-2: #232428;
+    --border-subtle: #26272B;
+    --border-visible: #35363A;
+    --text-primary: #EEEFF1;
+    --text-secondary: #8A8F98;
+    --text-tertiary: #5C5F66;
+    --accent: #5E6AD2;
+    --accent-hover: #6B76DC;
+    --accent-muted: rgba(94,106,210,0.15);
+    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* cluster colors removed — single neutral style */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg-base);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === HEADER === */
+  .page-header { text-align: center; margin-bottom: 32px; }
+  .page-header h1 {
+    font-size: 20px; font-weight: 600; color: var(--text-primary);
+    letter-spacing: -0.3px; line-height: 28px;
+  }
+  /* === PYRAMID === */
+  .pyramid {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px; width: 100%; max-width: 1400px;
+  }
+
+  /* === LAYER === */
+  .layer {
+    border-radius: 8px;
+    padding: 14px 16px 12px;
+    transition: border-color 150ms ease;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+  }
+  .layer:hover { border-color: var(--border-visible); }
+
+  .layer-6 { width: 38%; }
+  .layer-5 { width: 55%; }
+  .layer-4 { width: 70%; }
+  .layer-3 { width: 82%; }
+  .layer-2 { width: 92%; }
+  .layer-1 { width: 100%; }
+
+  /* === LAYER HEADER === */
+  .layer-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .layer-title {
+    font-size: 11px; font-weight: 600; color: var(--text-secondary);
+    letter-spacing: 0.5px; text-transform: uppercase; line-height: 14px;
+  }
+  .layer-meta {
+    font-size: 11px; color: var(--text-tertiary);
+    display: flex; gap: 12px; line-height: 14px;
+  }
+
+  /* === AREAS GRID === */
+  .areas-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* === AREA BLOCK (workflow card) === */
+  .area-block {
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: default;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+    transition: border-color 150ms ease, background 150ms ease;
+  }
+  .area-block:hover {
+    border-color: var(--border-visible);
+    background: var(--bg-elevated-2);
+  }
+
+  /* Card header: name left, role count right */
+  .area-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .area-name {
+    font-weight: 500; color: var(--text-primary);
+    font-size: 13px; line-height: 18px;
+  }
+  .area-count {
+    font-size: 13px; font-weight: 400;
+    color: var(--text-tertiary);
+    line-height: 18px;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+
+  /* Roles list */
+  .roles-list { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .role-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.04);
+    padding: 4px 10px 4px 8px;
+    border-radius: 6px;
+    font-size: 12px; line-height: 16px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .role-tag svg {
+    width: 12px; height: 12px; flex-shrink: 0;
+    stroke: var(--text-tertiary); stroke-width: 1.5;
+    fill: none;
+  }
+
+  /* === FLOW CONNECTOR === */
+  .flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    height: 14px; user-select: none;
+  }
+  .flow-arrow svg {
+    width: 10px; height: 10px;
+    stroke: var(--border-visible); stroke-width: 1.5; fill: none;
+  }
+
+  /* legend removed */
+
+  /* === RESPONSIVE === */
+  @media (max-width: 1024px) {
+    .layer-6 { width: 50%; } .layer-5 { width: 65%; }
+    .layer-4 { width: 78%; } .layer-3 { width: 88%; }
+    .layer-2 { width: 95%; } .layer-1 { width: 100%; }
+  }
+  @media (max-width: 640px) {
+    body { padding: 16px 12px 40px; }
+    .layer { padding: 10px 10px 8px; }
+    .layer-6,.layer-5,.layer-4,.layer-3,.layer-2,.layer-1 { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>UK Retail Enterprise</h1>
+</div>
+
+<div class="pyramid">
+
+  <!-- LAYER 6 -->
+  <div class="layer layer-6" id="L6">
+    <div class="layer-head">
+      <div class="layer-title">Layer 6 — C-Suite & Directors</div>
+      <div class="layer-meta"><span>~50–200 people</span><span>24+ roles</span></div>
+    </div>
+    <div class="areas-grid">
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Store Operations</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Operations Director</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Supply Chain</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CSCO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Logistics</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>VP Logistics</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Trading</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Trading Director</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Customer</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CCO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">People</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CPO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Retail Network</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Retail Director</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Digital</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CDO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Marketing</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CMO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Technology</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CTO / CIO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Finance</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CFO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Data</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CDO</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Compliance</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>H&S Director</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Legal</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>General Counsel</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">ESG</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CSO</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><svg viewBox="0 0 12 12"><path d="M6 2L6 10M3 7L6 10L9 7"/></svg></div>
+
+  <!-- LAYER 5 -->
+  <div class="layer layer-5" id="L5">
+    <div class="layer-head">
+      <div class="layer-title">Layer 5 — HQ Functions & Specialists</div>
+      <div class="layer-meta"><span>~1,000–5,000 people</span><span>40+ roles across all 24 areas</span></div>
+    </div>
+    <div class="areas-grid">
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Supply Chain Planning</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Demand Planner</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Supply Planner</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Availability Mgr</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Buying & Category</div><span class="area-count">4</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Category Mgr</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Buyer</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Space Planner</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Merchandiser</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Pricing & Promos</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Pricing Analyst</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Promos Mgr</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Markdown Analyst</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Loyalty & CRM</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CRM Analyst</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Loyalty Pgm Mgr</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Workforce Planning</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>WFM Planner</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Labour Analyst</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">HR & L&D</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Talent Mgr</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>L&D Specialist</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Recruitment Ops</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Payroll</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Payroll Admin</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Pay Coordinator</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Omnichannel</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Online Ops Mgr</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CX Manager</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">E-Commerce</div><span class="area-count">4</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Web Dev</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>UX</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>SEO</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Content</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Marketing</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Marketing Mgr</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Campaign Mgr</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>VM Manager</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">BI & Analytics</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Data Analyst</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>BI Developer</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Insight Mgr</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Technology</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>IT Service Desk</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Integration Dev</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>RPA Dev</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Finance</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Mgmt Accountant</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Finance Analyst</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Sustainability</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Sustainability Coord.</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Waste Mgr</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Legal & Risk</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>DPO</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Contracts Mgr</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Risk Analyst</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Transport Planning</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Transport Planner</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Fleet Manager</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><svg viewBox="0 0 12 12"><path d="M6 2L6 10M3 7L6 10L9 7"/></svg></div>
+
+  <!-- LAYER 4 -->
+  <div class="layer layer-4" id="L4">
+    <div class="layer-head">
+      <div class="layer-title">Layer 4 — Multi-Site & Regional Management</div>
+      <div class="layer-meta"><span>~500–2,000 people</span><span>6+ roles</span></div>
+    </div>
+    <div class="areas-grid">
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Field Operations</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Area Manager</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Regional Manager</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Area People</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>People Partner</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Recruitment Coord.</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Comms Cascade</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Comms Coordinator</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Regional Compliance</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>H&S Advisor</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Compliance Mgr</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Property</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Property Manager</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Maintenance Coord.</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Regional Finance</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Financial Controller</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><svg viewBox="0 0 12 12"><path d="M6 2L6 10M3 7L6 10L9 7"/></svg></div>
+
+  <!-- LAYER 3 -->
+  <div class="layer layer-3" id="L3">
+    <div class="layer-head">
+      <div class="layer-title">Layer 3 — Store & Site Management</div>
+      <div class="layer-meta"><span>~3,000–8,000 people</span><span>8+ roles</span></div>
+    </div>
+    <div class="areas-grid">
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Store Operations</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Store Manager</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Duty Manager</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">DC Management</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>DC Manager</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Depot Manager</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">People Management</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>People Manager</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Store HR Lead</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Compliance</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Store Manager</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Compliance Mgr</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Loss Prevention</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>LP Manager</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">In-Store IT</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>IT Technician</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Systems Champion</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Facilities</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Facilities Coord.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><svg viewBox="0 0 12 12"><path d="M6 2L6 10M3 7L6 10L9 7"/></svg></div>
+
+  <!-- LAYER 2 -->
+  <div class="layer layer-2" id="L2">
+    <div class="layer-head">
+      <div class="layer-title">Layer 2 — In-Store Support & Supervision</div>
+      <div class="layer-meta"><span>~15,000–40,000 people</span><span>18+ roles</span></div>
+    </div>
+    <div class="areas-grid">
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Replenishment</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Section Leader</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Team Leader</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Night-Fill Lead</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Checkout</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Checkout TL</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Front-End Mgr</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Warehouse</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Shift Manager</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>WH Team Leader</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Scheduling</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Shift Coordinator</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Rota Planner</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Training</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Buddy / Mentor</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Training Champion</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Task Cascade</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Notice Board Champion</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Shelf-Edge Pricing</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Pricing Assistant</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">LP</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>SCO Host</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Security TL</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Online Ops</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>E-Com Lead</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Delivery Coord.</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Cash Office</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Cash Office Op.</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Waste</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Waste Champion</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Reductions</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><svg viewBox="0 0 12 12"><path d="M6 2L6 10M3 7L6 10L9 7"/></svg></div>
+
+  <!-- LAYER 1 -->
+  <div class="layer layer-1" id="L1">
+    <div class="layer-head">
+      <div class="layer-title">Layer 1 — Direct Customer Contact</div>
+      <div class="layer-meta"><span>~50,000–150,000 people across the estate</span><span>15+ roles</span></div>
+    </div>
+    <div class="areas-grid">
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Replenishment</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Store Assistant</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Fresh Counter</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Replen. Assistant</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Checkout & POS</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Cashier</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>SCO Host</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Service Desk</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Warehouse & DC</div><span class="area-count">4</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Picker</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Forklift Driver</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Goods-In</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Dispatch</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Transport</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>HGV Driver</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Van Driver</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Driver's Mate</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Omnichannel</div><span class="area-count">3</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>In-Store Picker</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>C&C Desk</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Returns Op.</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Security</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Security Guard</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>CCTV Operator</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Safety</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Fire Marshal</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>First Aider</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Visual Merch</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Visual Merchandiser</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>In-Store Merch</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">In-Store Marketing</div><span class="area-count">1</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Signage Op.</span></div>
+      </div>
+      <div class="area-block">
+        <div class="area-head"><div class="area-name">Facilities</div><span class="area-count">2</span></div>
+        <div class="roles-list"><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Cleaner</span><span class="role-tag"><svg viewBox="0 0 10 10"><circle cx="5" cy="3" r="1.8"/><path d="M1.5 9.5a3.5 3.5 0 0 1 7 0"/></svg>Maintenance Op.</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- no legend needed -->
+
+<!-- no interactive JS -->
+
+</body>
+</html>
