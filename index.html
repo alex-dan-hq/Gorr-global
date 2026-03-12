@@ -834,6 +834,7 @@
     border-left: 3px solid var(--danger);
     border-radius: 0 6px 6px 0;
     margin-bottom: 8px;
+    font-size: 12px; color: var(--text-secondary); line-height: 18px;
   }
   .friction-title { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
   .friction-desc { font-size: 11px; color: var(--text-secondary); line-height: 16px; }
@@ -841,7 +842,7 @@
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(242,85,90,0.08); padding: 3px 8px;
     border-radius: 4px; font-size: 11px; font-weight: 600;
-    color: var(--danger); margin-top: 4px;
+    color: var(--danger); flex-shrink: 0; white-space: nowrap;
   }
 
   /* Workaround Pills */
@@ -874,7 +875,7 @@
   .quote-card blockquote { font-size: 12px; font-style: italic; color: var(--text-secondary); line-height: 18px; margin: 0; }
   .quote-card cite { font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 4px; font-style: normal; }
   /* Friction card content styling */
-  .friction-card strong { color: var(--text-primary); font-weight: 600; }
+  .friction-card strong { color: var(--text-primary); font-weight: 600; font-size: 12px; }
   .friction-card p { font-size: 12px; color: var(--text-secondary); line-height: 18px; margin: 0; }
   /* Quote grid */
   .quote-grid { display: flex; flex-direction: column; gap: 8px; }
@@ -927,6 +928,22 @@
     background: rgba(255,255,255,0.04); padding: 1px 6px;
     border-radius: 3px; margin: 1px 2px; font-size: 10px;
     color: var(--text-secondary); white-space: nowrap;
+  }
+
+  /* Alias Pills (inside Retailer Aliases detail sections) */
+  .alias-grid {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .alias-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px; padding: 3px 8px;
+    font-size: 11px; color: var(--text-secondary);
+    line-height: 16px; white-space: nowrap;
+  }
+  .alias-pill strong {
+    color: var(--text-primary); font-weight: 600;
   }
 
   /* Cross-Cutting Tabs */
@@ -5846,17 +5863,17 @@ const backLink = `<a href="#" onclick="showView('dashboard');return false;" styl
       <div class="ctrl-group">
         <span class="ctrl-label">Region</span>
         ${[{k:null,l:"All"},{k:"US",l:"US"},{k:"UK",l:"UK"},{k:"EU",l:"EU"},{k:"Other",l:"Other"}].map(r=>
-          `<button class="btn ${regionF===r.k?'on':''}" onclick="regionF=${r.k===null?'null':"'"+r.k+"'"};render()">${r.l}</button>`
+          `<button class="btn ${regionF===r.k?'on':''}" onclick="regionF=${r.k===null?'null':"'"+r.k+"'"};slRender()">${r.l}</button>`
         ).join('')}
       </div>
       <div class="ctrl-sep"></div>
       <div class="ctrl-group">
         <span class="ctrl-label">Sort by</span>
         ${[{k:"count",l:"Count"},{k:"funding",l:"Funding"},{k:"momentum",l:"Activity"}].map(s=>
-          `<button class="btn ${sortBy===s.k?'on':''}" onclick="sortBy='${s.k}';render()">${s.l}</button>`
+          `<button class="btn ${sortBy===s.k?'on':''}" onclick="sortBy='${s.k}';slRender()">${s.l}</button>`
         ).join('')}
       </div>
-      <input type="text" class="search-box" placeholder="Search…" value="${searchQ}" oninput="searchQ=this.value;render()">
+      <input type="text" class="search-box" placeholder="Search…" value="${searchQ}" oninput="searchQ=this.value;slRender()">
     </div>
     <div class="grid">${verts.map(v=>renderCard(v)).join('')}</div>
   `;
@@ -5925,7 +5942,7 @@ function closeDetail(){
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDetail()});
 
-render();
+slRender();
 </script>
 </body>
 </html>
