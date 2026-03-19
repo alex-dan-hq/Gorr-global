@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Landscape — UK Grocery</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --surface: #111113;
+  --surface-2: #18181b;
+  --surface-3: #1f1f23;
+  --border: #27272a;
+  --border-light: #3f3f46;
+  --text: #fafafa;
+  --text-2: #a1a1aa;
+  --text-3: #71717a;
+  --accent: #f97316;
+  --accent-dim: #f9731620;
+  --green: #22c55e;
+  --green-dim: #22c55e18;
+  --yellow: #eab308;
+  --yellow-dim: #eab30818;
+  --red: #ef4444;
+  --red-dim: #ef444418;
+  --blue: #3b82f6;
+  --blue-dim: #3b82f618;
+  --purple: #a78bfa;
+  --purple-dim: #a78bfa18;
+  --teal: #2dd4bf;
+  --teal-dim: #2dd4bf18;
+  --mono: 'DM Mono', monospace;
+  --serif: 'Instrument Serif', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.container { max-width: 1400px; margin: 0 auto; padding: 48px 32px; position: relative; z-index: 1; }
+
+/* Header */
+.header { margin-bottom: 56px; }
+.header h1 { font-family: var(--serif); font-size: 42px; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 8px; }
+.header .subtitle { font-family: var(--mono); font-size: 13px; color: var(--text-3); letter-spacing: 0.5px; }
+.header .date { font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
+/* Section headers */
+.section-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+.badge-red { color: var(--red); border-color: var(--red); background: var(--red-dim); }
+.badge-green { color: var(--green); border-color: var(--green); background: var(--green-dim); }
+.badge-yellow { color: var(--yellow); border-color: var(--yellow); background: var(--yellow-dim); }
+.badge-blue { color: var(--blue); border-color: var(--blue); background: var(--blue-dim); }
+.badge-purple { color: var(--purple); border-color: var(--purple); background: var(--purple-dim); }
+.badge-teal { color: var(--teal); border-color: var(--teal); background: var(--teal-dim); }
+.badge-accent { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+.badge-muted { color: var(--text-3); border-color: var(--border); background: var(--surface-2); }
+
+/* Stat cards */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.stat-card .label { font-family: var(--mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.stat-card .value { font-family: var(--serif); font-size: 36px; color: var(--text); line-height: 1.1; }
+.stat-card .detail { font-size: 13px; color: var(--text-2); margin-top: 8px; }
+
+/* Market share bar */
+.share-section { margin-bottom: 56px; }
+.share-bar-container { margin-bottom: 20px; }
+.share-bar {
+  display: flex;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.share-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: #fff;
+  transition: opacity 0.2s;
+  cursor: default;
+  position: relative;
+}
+.share-segment:hover { opacity: 0.85; }
+.share-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+.share-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.share-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.share-legend-item .pct { font-family: var(--mono); font-size: 12px; color: var(--text); }
+.share-legend-item .trend { font-family: var(--mono); font-size: 11px; margin-left: 4px; }
+.trend-up { color: var(--green); }
+.trend-down { color: var(--red); }
+.trend-flat { color: var(--text-3); }
+
+/* Retailer cards */
+.retailer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 48px; }
+.retailer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.retailer-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.retailer-card h3 { font-family: var(--sans); font-size: 18px; font-weight: 600; }
+.retailer-card .card-meta { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+.retailer-card p { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-bottom: 12px; }
+.retailer-card .hierarchy {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-top: 12px;
+  line-height: 1.8;
+}
+.retailer-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.retailer-stat {
+  flex: 1;
+}
+.retailer-stat .rs-label { font-family: var(--mono); font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; }
+.retailer-stat .rs-value { font-family: var(--mono); font-size: 14px; color: var(--text); font-weight: 500; margin-top: 2px; }
+
+/* Status dot */
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.status-active { background: var(--red); animation: pulse-dot 2s ease-in-out infinite; }
+.status-major { background: var(--accent); animation: pulse-dot 2s ease-in-out infinite; }
+.status-consolidating { background: var(--yellow); }
+.status-complete { background: var(--green); }
+.status-done { background: var(--text-3); }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* Timeline */
+.timeline { margin-bottom: 48px; }
+.timeline-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+}
+.timeline-card .card-label { font-family: var(--mono); font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 20px; display: inline-block; background: var(--surface-2); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); }
+.timeline-card h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 24px; }
+.tl-item { display: flex; gap: 20px; margin-bottom: 24px; position: relative; }
+.tl-item:last-child { margin-bottom: 0; }
+.tl-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 16px;
+  padding-top: 4px;
+}
+.tl-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border-light); background: var(--bg); flex-shrink: 0; }
+.tl-dot.active { background: var(--red); border-color: var(--red); }
+.tl-dot.recent { background: var(--accent); border-color: var(--accent); }
+.tl-dot.future { background: transparent; border-color: var(--border-light); }
+.tl-line { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+.tl-content { flex: 1; }
+.tl-date { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-bottom: 4px; }
+.tl-text { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+.tl-text strong { color: var(--text); font-weight: 600; }
+.tl-text .highlight { color: var(--accent); font-weight: 500; }
+
+/* L2 Population table */
+.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.data-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-3);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  font-size: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table .td-name { color: var(--text); font-weight: 500; }
+.data-table .td-num { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+.data-table .td-total { color: var(--text); font-weight: 600; font-size: 15px; }
+.data-table .td-num-total { font-family: var(--mono); font-size: 15px; color: var(--accent); font-weight: 600; }
+
+/* Signal cards */
+.signals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 48px; }
+.signal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.signal-card .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.signal-card h3 { font-size: 16px; font-weight: 600; margin-top: 12px; line-height: 1.4; }
+.signal-card p { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-top: 12px; }
+
+/* Pay compression visual */
+.pay-visual {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+.pay-bar-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.pay-bar-label { font-family: var(--mono); font-size: 12px; color: var(--text-2); min-width: 200px; text-align: right; }
+.pay-bar-track { flex: 1; height: 28px; background: var(--surface-2); border-radius: 6px; position: relative; overflow: hidden; }
+.pay-bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-family: var(--mono); font-size: 11px; color: #fff; font-weight: 500; }
+.pay-bar-amount { font-family: var(--mono); font-size: 13px; color: var(--text); min-width: 80px; }
+.pay-gap { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+.pay-gap p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+.pay-gap .gap-value { font-family: var(--mono); color: var(--red); font-weight: 500; font-size: 18px; }
+
+/* Regulatory timeline */
+.reg-timeline { margin-bottom: 48px; }
+
+/* WFM table */
+.wfm-section { margin-bottom: 48px; }
+.wfm-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.wfm-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-3);
+  text-align: left;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.wfm-table td { font-size: 13px; padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text-2); }
+.wfm-table tr:last-child td { border-bottom: none; }
+.wfm-table .name { color: var(--text); font-weight: 500; }
+.threat-high { color: var(--red); font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.threat-med { color: var(--yellow); font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.threat-low { color: var(--green); font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.threat-none { color: var(--text-3); font-family: var(--mono); font-size: 12px; }
+
+/* Discounter expansion */
+.discounter-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 48px; }
+.discounter-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.discounter-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+.disc-stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.disc-stat-row:last-child { border-bottom: none; }
+.disc-stat-label { font-size: 13px; color: var(--text-2); }
+.disc-stat-value { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+
+/* Key signals */
+.key-signals { margin-bottom: 48px; }
+.signal-numbered {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 20px;
+}
+.signal-num {
+  font-family: var(--serif);
+  font-size: 32px;
+  color: var(--border-light);
+  min-width: 40px;
+  line-height: 1;
+  padding-top: 4px;
+}
+.signal-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.signal-content p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+
+/* Footer */
+.footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .retailer-grid { grid-template-columns: 1fr; }
+  .signals-grid { grid-template-columns: 1fr; }
+  .discounter-grid { grid-template-columns: 1fr; }
+}
+
+.section { margin-bottom: 56px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Market Landscape — UK Grocery</h1>
+  <div class="subtitle">Market structure · players · transformation · workforce · regulation · technology</div>
+  <div class="date">19 March 2026 · Gorr Global</div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="label">Market size</div>
+    <div class="value">£255B</div>
+    <div class="detail">→ £297B by 2030 · CAGR +3.0%</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Physical retail</div>
+    <div class="value">88%</div>
+    <div class="detail">Online ~12% · omnichannel, not substitutive</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Total workforce</div>
+    <div class="value">~1M</div>
+    <div class="detail">Top 10 retailers · ~950K–1M UK employees</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Layer 2 population</div>
+    <div class="value" style="color: var(--accent);">55–73K</div>
+    <div class="detail">Addressable managers across top 10</div>
+  </div>
+</div>
+
+<!-- MARKET SHARE -->
+<div class="section share-section">
+  <h2 class="section-title">Market Share</h2>
+  <div class="share-bar-container">
+    <div class="share-bar">
+      <div class="share-segment" style="flex: 29.1; background: #2563eb;" title="Tesco 29.1%">29.1%</div>
+      <div class="share-segment" style="flex: 15.1; background: #f97316;" title="Sainsbury's 15.1%">15.1%</div>
+      <div class="share-segment" style="flex: 11.8; background: #22c55e;" title="Asda 11.8%">11.8%</div>
+      <div class="share-segment" style="flex: 10.9; background: #3b82f6;" title="Aldi 10.9%">10.9%</div>
+      <div class="share-segment" style="flex: 8.4; background: #eab308;" title="Morrisons 8.4%">8.4%</div>
+      <div class="share-segment" style="flex: 8.1; background: #ef4444;" title="Lidl 8.1%">8.1%</div>
+      <div class="share-segment" style="flex: 6; background: #a78bfa;" title="Co-op ~6%">6%</div>
+      <div class="share-segment" style="flex: 5; background: #2dd4bf;" title="Waitrose ~5%">5%</div>
+      <div class="share-segment" style="flex: 4; background: #f472b6;" title="M&S ~4%"></div>
+      <div class="share-segment" style="flex: 2; background: #6b7280;" title="Iceland ~2%"></div>
+    </div>
+    <div class="share-legend">
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#2563eb;"></div>Tesco <span class="pct">29.1%</span> <span class="trend trend-up">+0.3</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#f97316;"></div>Sainsbury's <span class="pct">15.1%</span> <span class="trend trend-up">+0.1</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#22c55e;"></div>Asda <span class="pct">11.8%</span> <span class="trend trend-down">-0.9</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#3b82f6;"></div>Aldi <span class="pct">10.9%</span> <span class="trend trend-up">+0.2</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#eab308;"></div>Morrisons <span class="pct">8.4%</span> <span class="trend trend-flat">flat</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#ef4444;"></div>Lidl <span class="pct">8.1%</span> <span class="trend trend-up">+0.4</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#a78bfa;"></div>Co-op <span class="pct">~6%</span> <span class="trend trend-flat">stable</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#2dd4bf;"></div>Waitrose <span class="pct">~5%</span> <span class="trend trend-flat">stable</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#f472b6;"></div>M&S Food <span class="pct">~4%</span> <span class="trend trend-up">growing</span></div>
+      <div class="share-legend-item"><div class="share-legend-dot" style="background:#6b7280;"></div>Iceland <span class="pct">~2%</span> <span class="trend trend-flat">stable</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESTRUCTURING TRACKER -->
+<div class="section">
+  <h2 class="section-title">Restructuring Tracker</h2>
+  <p style="font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-bottom: 24px; margin-top: -16px;">Live management layer compression across UK grocery · your market signal</p>
+
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px;">
+    <!-- Tesco -->
+    <div class="retailer-card" style="padding: 20px;">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">Tesco</h3>
+      <div><span class="status-dot status-active"></span><span style="font-family: var(--mono); font-size: 11px; color: var(--red);">ACTIVE PILOT</span></div>
+      <p style="font-size: 12px; margin-top: 12px;">13 East Midlands stores: Team Leader eliminated. Department Managers rebranded "Team Managers." Grocery + warehouse merged. If pilot succeeds → full estate rollout (2,000+ stores).</p>
+      <p style="font-size: 12px;">Previous: 1,750 manager roles cut (2023), Deputy SM eliminated, counters closed (279 stores).</p>
+      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-3);">
+        L2 population: <span style="color: var(--accent);">~15,000–18,000</span> · 341K total workforce
+      </div>
+    </div>
+    <!-- Sainsbury's -->
+    <div class="retailer-card" style="padding: 20px;">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">Sainsbury's</h3>
+      <div><span class="status-dot status-major"></span><span style="font-family: var(--mono); font-size: 11px; color: var(--accent);">MAJOR RESTRUCTURE</span></div>
+      <p style="font-size: 12px; margin-top: 12px;">Axing Deputy Manager, Department Manager, Team Leader, Store Supervisor. Replaced by fewer "Operations Managers" and combined "Customer and Trading Manager" role.</p>
+      <p style="font-size: 12px;">3,000 roles cut, 20% senior management reduction.</p>
+      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-3);">
+        Target: <span style="color: var(--accent);">£500M savings / 3yrs</span> · 140K workforce
+      </div>
+    </div>
+    <!-- Asda -->
+    <div class="retailer-card" style="padding: 20px;">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">Asda</h3>
+      <div><span class="status-dot status-consolidating"></span><span style="font-family: var(--mono); font-size: 11px; color: var(--yellow);">CONSOLIDATING</span></div>
+      <p style="font-size: 12px; margin-top: 12px;">July 2025: Section Manager + Trading Manager merged into single "Manager" role. PE ownership (TDR Capital 67.5%) driving aggressive cost reduction. Further cuts expected.</p>
+      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-3);">
+        L2 population: <span style="color: var(--accent);">~10,000–12,000</span> · ~115K workforce
+      </div>
+    </div>
+    <!-- Co-op -->
+    <div class="retailer-card" style="padding: 20px;">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">Co-op</h3>
+      <div><span class="status-dot status-complete"></span><span style="font-family: var(--mono); font-size: 11px; color: var(--green);">COMPLETED</span></div>
+      <p style="font-size: 12px; margin-top: 12px;">Four management tiers collapsed to three. 2,000+ roles impacted. Restructuring largely complete — now dealing with consequences (remaining managers stretched).</p>
+      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-3);">
+        L2 population: <span style="color: var(--accent);">~4,000–5,000</span> · ~56K workforce
+      </div>
+    </div>
+    <!-- Waitrose -->
+    <div class="retailer-card" style="padding: 20px;">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">Waitrose</h3>
+      <div><span class="status-dot status-done"></span><span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">DONE</span></div>
+      <p style="font-size: 12px; margin-top: 12px;">"Simpler Shops": 678 roles cut, departmental silos removed. Partnership model complicates further cuts. Focus shifting to capability, not headcount.</p>
+      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-3);">
+        L2 population: <span style="color: var(--accent);">~2,000–3,000</span> · ~74K JLP total
+      </div>
+    </div>
+  </div>
+
+  <!-- Strategic Insight -->
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+      <span class="badge badge-red">Strategic Insight</span>
+      <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">18 Mar 2026</span>
+    </div>
+    <h3 style="font-size: 17px; font-weight: 600; margin-bottom: 12px;">The value prop has shifted: not "reduce L2" but "make L2 reduction survivable"</h3>
+    <p style="font-size: 14px; color: var(--text-2); line-height: 1.65;">Retailers are already cutting management layers — independently of any AI product. Tesco, Sainsbury's, Asda, Co-op, Waitrose have all compressed Level 2 in the past 18 months. The product doesn't need to sell "eliminate managers." It needs to sell: "You've just cut 30% of your management layer. The remaining managers need support to handle the expanded scope, or store performance collapses." This is a much stronger and more urgent sales narrative — and it's happening right now, not hypothetically.</p>
+    <div class="hierarchy" style="margin-top: 16px;">→ The buying conversation is with People Director / CPO. Frame as risk mitigation for restructuring already underway.</div>
+  </div>
+</div>
+
+<!-- PAY COMPRESSION -->
+<div class="section">
+  <h2 class="section-title">Pay Compression</h2>
+  <div class="pay-visual">
+    <div class="pay-bar-row">
+      <div class="pay-bar-label">NLW (Apr 2026)</div>
+      <div class="pay-bar-track">
+        <div class="pay-bar-fill" style="width: 84.8%; background: var(--red);">£12.71/hr</div>
+      </div>
+      <div class="pay-bar-amount">£12.71/hr</div>
+    </div>
+    <div class="pay-bar-row">
+      <div class="pay-bar-label">Dept Manager typical</div>
+      <div class="pay-bar-track">
+        <div class="pay-bar-fill" style="width: 93.3%; background: var(--yellow);">£13–15/hr</div>
+      </div>
+      <div class="pay-bar-amount">£14.00/hr</div>
+    </div>
+    <div class="pay-bar-row">
+      <div class="pay-bar-label">Aldi Store Assistant</div>
+      <div class="pay-bar-track">
+        <div class="pay-bar-fill" style="width: 96.5%; background: var(--green);">£14.47/hr</div>
+      </div>
+      <div class="pay-bar-amount">£14.47/hr</div>
+    </div>
+    <div class="pay-bar-row">
+      <div class="pay-bar-label">Aldi Store Manager</div>
+      <div class="pay-bar-track">
+        <div class="pay-bar-fill" style="width: 100%; background: var(--blue);">£33.17/hr equiv</div>
+      </div>
+      <div class="pay-bar-amount">£69,000/yr</div>
+    </div>
+    <div class="pay-gap">
+      <p>Management pay premium at legacy grocers: <span class="gap-value">£0.30–£2.30/hr</span></p>
+      <p style="margin-top: 8px;">In many cases less than £1/hr for taking on people management responsibility. This is the "why bother?" problem driving L2 recruitment difficulties and 30–40% first-year turnover.</p>
+    </div>
+  </div>
+</div>
+
+<!-- L2 POPULATION TABLE -->
+<div class="section">
+  <h2 class="section-title">Layer 2 Population</h2>
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Retailer</th>
+          <th>Est. L2 Managers</th>
+          <th>Total Workforce</th>
+          <th>USDAW</th>
+          <th>Restructuring Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-name">Tesco</td><td class="td-num">15,000–18,000</td><td>341,000</td><td><span class="badge badge-yellow" style="font-size: 9px;">YES</span></td><td><span class="status-dot status-active"></span>Active pilot</td></tr>
+        <tr><td class="td-name">Sainsbury's</td><td class="td-num">8,000–12,000</td><td>140,000</td><td><span class="badge badge-yellow" style="font-size: 9px;">YES</span></td><td><span class="status-dot status-major"></span>Major restructure</td></tr>
+        <tr><td class="td-name">Asda</td><td class="td-num">10,000–12,000</td><td>115,000</td><td><span class="badge badge-yellow" style="font-size: 9px;">YES</span></td><td><span class="status-dot status-consolidating"></span>Consolidating</td></tr>
+        <tr><td class="td-name">Morrisons</td><td class="td-num">6,000–8,000</td><td>101–110,000</td><td><span class="badge badge-yellow" style="font-size: 9px;">YES</span></td><td><span class="status-dot" style="background: var(--yellow);"></span>Expected H2 2026</td></tr>
+        <tr><td class="td-name">Co-op</td><td class="td-num">4,000–5,000</td><td>56,000</td><td><span class="badge badge-yellow" style="font-size: 9px;">YES</span></td><td><span class="status-dot status-complete"></span>Complete</td></tr>
+        <tr><td class="td-name">M&S</td><td class="td-num">3,000–5,000</td><td>63–73,000</td><td><span class="badge badge-muted" style="font-size: 9px;">NO</span></td><td><span class="status-dot" style="background: var(--yellow);"></span>Expected H2 2026</td></tr>
+        <tr><td class="td-name">Waitrose</td><td class="td-num">2,000–3,000</td><td>74,000 (JLP)</td><td><span class="badge badge-muted" style="font-size: 9px;">NO</span></td><td><span class="status-dot status-done"></span>Done</td></tr>
+        <tr><td class="td-name">Aldi</td><td class="td-num">3,000–4,000</td><td>45,000+</td><td><span class="badge badge-muted" style="font-size: 9px;">NO</span></td><td style="color: var(--text-3);">Already flat</td></tr>
+        <tr><td class="td-name">Lidl</td><td class="td-num">2,000–3,000</td><td>35,000+</td><td><span class="badge badge-muted" style="font-size: 9px;">NO</span></td><td style="color: var(--text-3);">Already flat</td></tr>
+        <tr><td class="td-name">Iceland</td><td class="td-num">2,000–3,000</td><td>23–30,000</td><td><span class="badge badge-muted" style="font-size: 9px;">NO</span></td><td><span class="status-dot" style="background: var(--yellow);"></span>Expected</td></tr>
+        <tr style="background: var(--surface-2);"><td class="td-total">Total</td><td class="td-num-total">55,000–73,000</td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- RESTRUCTURING TIMELINE -->
+<div class="section timeline">
+  <h2 class="section-title">Restructuring Timeline</h2>
+  <div class="timeline-card">
+    <span class="card-label">Timeline</span>
+    <h3>Management layer compression — 2017 to H2 2026</h3>
+
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">2017</div>
+        <div class="tl-text"><strong>Sainsbury's foundational restructure.</strong> Deputy, Department Manager, Team Leader axed. Replaced by CTMs. 2,400 CTMs hired externally from 19,000 applications.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">Jan 2023</div>
+        <div class="tl-text"><strong>Tesco cuts 1,750 manager roles.</strong> Deputy Store Manager eliminated in standard format. In-store counters closed (279 stores). First wave of compression.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">2023–2025</div>
+        <div class="tl-text"><strong>Waitrose "Simpler Shops"</strong> — 678 roles cut, departmental silos removed. <strong>Co-op</strong> collapses four tiers to three. 2,000+ roles impacted.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot recent"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">Jan 2025</div>
+        <div class="tl-text"><strong>Sainsbury's "Next Level" restructure.</strong> 3,000 roles cut. Deputy Manager, Department Manager, Team Leader, Store Supervisor all axed. £500M savings target. <span class="highlight">The most radical compression in the sector.</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot recent"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">Jul 2025</div>
+        <div class="tl-text"><strong>Asda merges Section Manager + Trading Manager.</strong> PE ownership driving aggressive cost compression. 13 regional managers axed in Jan 2025.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot active"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">Q1 2026 — NOW</div>
+        <div class="tl-text"><strong>Tesco 13-store East Midlands pilot</strong> — Team Leader eliminated, roles merged. If successful → full rollout. <span class="highlight">This is the trigger moment.</span> Remaining managers will need Pipeline-specific support tools within 6–12 months.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot future"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">Apr 2026</div>
+        <div class="tl-text"><strong>NLW rises to £12.71/hr</strong> + £600M property tax surge. Management pay premium compresses further. Accelerates next wave of restructuring at Morrisons, M&S, Iceland.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot future"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">H2 2026 (projected)</div>
+        <div class="tl-text"><strong>Tesco pilot results → rollout decision.</strong> If yes, 2,000+ stores affected. Aldi/Lidl continue expanding (targeting 1,500 and 1,100+ stores) — already flat structure, different opportunity.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGULATORY + SIGNALS -->
+<div class="section">
+  <h2 class="section-title">Regulatory & Market Signals</h2>
+  <div class="signals-grid">
+    <div class="signal-card">
+      <div class="card-header">
+        <span class="badge badge-red">UK Regulation</span>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">2025–2026</span>
+      </div>
+      <h3>Employment Rights Act 2025 + secondary legislation</h3>
+      <p>SSP from day one (not day 4). Zero-hours contracts reformed. Flexible working default. Each change adds compliance overhead per manager. Secondary legislation expected H2 2026 — may include provisions on algorithmic management.</p>
+    </div>
+    <div class="signal-card">
+      <div class="card-header">
+        <span class="badge badge-accent">Regulation</span>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">Enforcement Aug 2026</span>
+      </div>
+      <h3>EU AI Act: workforce monitoring = HIGH RISK</h3>
+      <p>AI systems monitoring employee performance, allocating tasks, or making decisions affecting workers are explicitly classified as high-risk (Article 6 Annex III §4). Requires conformity assessment, transparency, human oversight. Only 8 of 27 Member States ready. Affects Tesco Poland/Hungary, Aldi/Lidl parent companies.</p>
+    </div>
+    <div class="signal-card">
+      <div class="card-header">
+        <span class="badge badge-yellow">Economic Driver</span>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">Apr 2026</span>
+      </div>
+      <h3>NLW + £600M property tax surge hit simultaneously</h3>
+      <p>NLW to £12.71/hr. £600M property tax increase for largest retailers. £350M+ specifically hitting grocery. Over 90% of Tesco, Asda, Sainsbury's stores exceed the £500K threshold. Combined with ERA compliance costs — April 2026 is a pressure spike that will force the next wave of restructuring.</p>
+    </div>
+    <div class="signal-card">
+      <div class="card-header">
+        <span class="badge badge-purple">Union Signal</span>
+      </div>
+      <h3>USDAW position on AI in workforce management</h3>
+      <p>360K+ members at Tesco, Sainsbury's, Morrisons, Co-op, Asda. Won Supreme Court case vs Tesco (2024) on "fire and rehire." Formulating position on AI-assisted management. If formal consultation required → adds 3–6 months to sales cycle. Product language critical: "supporting managers" not "replacing managers."</p>
+    </div>
+    <div class="signal-card">
+      <div class="card-header">
+        <span class="badge badge-green">Market Signal</span>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">Mar 2026</span>
+      </div>
+      <h3>UK Big 4 tech budgets +15–25% YoY — but demanding ROI in 12 months</h3>
+      <p>Budget exists and is growing. But: "active pause" on speculative AI. 67% prefer to buy over build. Vendor fatigue is real. One-third of UK listed retailers issued profit warnings in 2025. Winners: products that show measurable value in weeks, not months.</p>
+    </div>
+    <div class="signal-card">
+      <div class="card-header">
+        <span class="badge badge-blue">Buyer Signal</span>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">Ongoing</span>
+      </div>
+      <h3>People Director / CPO is your buyer — but CTO/CIO is gatekeeper</h3>
+      <p>People function owns the restructuring problem. Tech function owns vendor approval and integration. Product must pass both gates. UK grocery CIOs are cautious — Tesco Tech is one of largest retail tech teams in UK. Need: SOC 2, integration with existing WFM (UKG, Reflexis), SSO, data residency in UK.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DISCOUNTER EXPANSION -->
+<div class="section">
+  <h2 class="section-title">Discounter Expansion</h2>
+  <p style="font-size: 14px; color: var(--text-2); margin-top: -16px; margin-bottom: 24px;">The structural template legacy grocers are converging toward — already flat, no L2 Department Manager layer</p>
+  <div class="discounter-grid">
+    <div class="discounter-card">
+      <h3>Aldi UK</h3>
+      <div class="disc-stat-row"><span class="disc-stat-label">Current stores</span><span class="disc-stat-value">1,080+</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Long-term target</span><span class="disc-stat-value">1,500 stores</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">2026 investment</span><span class="disc-stat-value">£370M (40+ stores)</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">2-year total investment</span><span class="disc-stat-value">£1.6 billion</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Store Assistant pay</span><span class="disc-stat-value">£13.50–£14.47/hr</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Store Manager pay</span><span class="disc-stat-value">£52,910–£69,000</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">USDAW</span><span class="disc-stat-value" style="color: var(--text-3);">No</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Online grocery</span><span class="disc-stat-value" style="color: var(--text-3);">No</span></div>
+    </div>
+    <div class="discounter-card">
+      <h3>Lidl GB</h3>
+      <div class="disc-stat-row"><span class="disc-stat-label">Current stores</span><span class="disc-stat-value">1,000+ (milestone late 2025)</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">2026 target</span><span class="disc-stat-value">1,100+ stores</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Near-term openings</span><span class="disc-stat-value">19 in next 8 weeks</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Fastest grower</span><span class="disc-stat-value" style="color: var(--green);">+0.4pts share</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Customer Asst pay</span><span class="disc-stat-value">£13.00–£13.95/hr</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Store Manager pay</span><span class="disc-stat-value">£34,500–£62,000</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">USDAW</span><span class="disc-stat-value" style="color: var(--text-3);">No</span></div>
+      <div class="disc-stat-row"><span class="disc-stat-label">Online grocery</span><span class="disc-stat-value" style="color: var(--text-3);">No</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- WFM INCUMBENTS -->
+<div class="section wfm-section">
+  <h2 class="section-title">WFM & Platform Landscape</h2>
+  <p style="font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-bottom: 20px; margin-top: -16px;">WFM incumbents, HR tech, and AI platforms — who occupies what space</p>
+  <table class="wfm-table">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>L2 Pipeline Coaching</th>
+        <th>Ops Automation</th>
+        <th>UK Grocery Depth</th>
+        <th>Revenue / Scale</th>
+        <th>Timeline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="name">UKG / Kronos (Reflexis)</td>
+        <td class="threat-none">None</td>
+        <td class="threat-high">HIGH</td>
+        <td class="threat-high">HIGH</td>
+        <td style="font-size: 12px;">Bryte AI Agents + Gemini · 80K orgs</td>
+        <td style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">Already deployed</td>
+      </tr>
+      <tr>
+        <td class="name">Workday + Paradox + Sana Labs</td>
+        <td class="threat-med">MED</td>
+        <td class="threat-med">MED</td>
+        <td class="threat-low">LOW</td>
+        <td style="font-size: 12px;">$2.5B quarterly · $1.1B Sana acq</td>
+        <td style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">12–18 mo</td>
+      </tr>
+      <tr>
+        <td class="name">Oracle Retail (AI Workforce Planner)</td>
+        <td class="threat-low">LOW</td>
+        <td class="threat-med">MED</td>
+        <td class="threat-high">HIGH</td>
+        <td style="font-size: 12px;">~35% UK grocery share · 14 new AI roles</td>
+        <td style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">12–18 mo to GA</td>
+      </tr>
+      <tr>
+        <td class="name">SAP (Joule agents)</td>
+        <td class="threat-none">None</td>
+        <td class="threat-high">HIGH</td>
+        <td class="threat-med">MED</td>
+        <td style="font-size: 12px;">5 agents GA May 2026 inc. Workforce Scheduling</td>
+        <td style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">May 2026</td>
+      </tr>
+      <tr>
+        <td class="name">YOOBIC</td>
+        <td class="threat-none">None</td>
+        <td class="threat-med">MED</td>
+        <td class="threat-med">MED</td>
+        <td style="font-size: 12px;">$24.8M rev (2024) · London HQ · 300 clients</td>
+        <td style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">Already deployed</td>
+      </tr>
+      <tr>
+        <td class="name">Quinyx</td>
+        <td class="threat-none">None</td>
+        <td class="threat-high">HIGH</td>
+        <td class="threat-med">MED</td>
+        <td style="font-size: 12px;">$42.4M rev (2024) · IDC Leader EMEA</td>
+        <td style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">Already deployed</td>
+      </tr>
+      <tr>
+        <td class="name">Legion Technologies</td>
+        <td class="threat-none">None</td>
+        <td class="threat-high">HIGH</td>
+        <td class="threat-low">LOW</td>
+        <td style="font-size: 12px;">Won Wilson James UK (Mar 2026)</td>
+        <td style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">Expanding to UK</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;">
+    <p style="font-size: 14px; color: var(--text-2); line-height: 1.6;"><strong style="color: var(--accent);">Pipeline whitespace confirmed:</strong> No incumbent occupies the Pipeline-specific position — diagnosing management transitions, coaching through the Level 1→2 moment, building capability at the span-of-control expansion point. All are operational (scheduling, task management, communications). None go deep into grocery vertical + Pipeline framework.</p>
+  </div>
+</div>
+
+<!-- REGULATORY TIMELINE -->
+<div class="section">
+  <h2 class="section-title">Regulatory Timeline</h2>
+  <div class="timeline-card">
+    <span class="card-label">Regulatory Timeline</span>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot recent"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">Apr 2026</div>
+        <div class="tl-text"><strong>NLW rises to £12.71/hr.</strong> Management pay premium compresses. £600M property tax surge. ERA day-one SSP takes effect. Accelerates restructuring at remaining retailers.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot active"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">2 Aug 2026</div>
+        <div class="tl-text"><strong>EU AI Act high-risk rules effective.</strong> Workforce monitoring requires conformity assessment. Affects Tesco Poland/Hungary, any retailer with EU ops. Sets industry expectation for UK.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot future"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">H2 2026 (expected)</div>
+        <div class="tl-text"><strong>UK Employment Rights Act secondary legislation.</strong> May include algorithmic management provisions. EHRC guidance anticipated.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-marker"><div class="tl-dot future"></div></div>
+      <div class="tl-content">
+        <div class="tl-date">Q1 2027</div>
+        <div class="tl-text"><strong>EU AI Act full enforcement.</strong> Fines up to €35M or 7% global turnover. First actions expected against visible targets. <strong>Rehiring on worse terms</strong> becomes automatically unfair dismissal (1 Jan 2027).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KEY SIGNALS -->
+<div class="section key-signals">
+  <h2 class="section-title">Key Signals for Product Strategy</h2>
+  <div class="signal-numbered">
+    <div class="signal-num">1</div>
+    <div class="signal-content">
+      <h4>Restructuring validates the thesis</h4>
+      <p>The buying conversation is not "would you like to invest in management development?" — it is "You've just cut 30% of your management layer. The remaining managers need support, or store performance collapses." This is already happening at five of the top ten retailers.</p>
+    </div>
+  </div>
+  <div class="signal-numbered">
+    <div class="signal-num">2</div>
+    <div class="signal-content">
+      <h4>April 2026 is a pressure spike</h4>
+      <p>NLW increase + £600M property tax surge + ERA compliance costs hit simultaneously. More restructuring will follow at Morrisons, M&S, Iceland in H2 2026. The wave is not slowing — it's accelerating.</p>
+    </div>
+  </div>
+  <div class="signal-numbered">
+    <div class="signal-num">3</div>
+    <div class="signal-content">
+      <h4>Discounters are a different opportunity</h4>
+      <p>Aldi and Lidl have no L2 Department Manager layer — the Pipeline transition happens in one jump. Different product features needed. But growing fast (2,100+ stores combined) and not USDAW-recognised — potentially easier GTM.</p>
+    </div>
+  </div>
+  <div class="signal-numbered">
+    <div class="signal-num">4</div>
+    <div class="signal-content">
+      <h4>WFM incumbents are going horizontal</h4>
+      <p>Workday, UKG, SAP, Oracle all shipping AI agents — but staying horizontal. None going deep into Pipeline diagnostics or grocery vertical. The window is open but closing: 12–18 months before "AI helps managers" becomes a commodity WFM feature.</p>
+    </div>
+  </div>
+  <div class="signal-numbered">
+    <div class="signal-num">5</div>
+    <div class="signal-content">
+      <h4>USDAW is a GTM variable</h4>
+      <p>Five of ten top grocers are USDAW-recognised. Union position on AI in workforce management is forming. Either target non-USDAW retailers first (Aldi, Lidl, M&S, Waitrose) or position as "union-friendly" tool.</p>
+    </div>
+  </div>
+  <div class="signal-numbered">
+    <div class="signal-num">6</div>
+    <div class="signal-content">
+      <h4>Two critical unknowns remain</h4>
+      <p>Does store performance actually fall after restructuring (demand validation)? And will People Directors pay for the solution (buyer validation)? These are not technology questions. They are market validation questions that require conversations with people inside the restructuring.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Market Landscape — UK Grocery · Gorr Global</span>
+  <span>Updated 19 March 2026</span>
+</div>
+
+</div>
+</body>
+</html>
