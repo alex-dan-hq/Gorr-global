@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Radar — Pipeline AI for UK Grocery</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #111113;
+    --surface-2: #18181b;
+    --surface-3: #1f1f23;
+    --border: #27272a;
+    --border-light: #3f3f46;
+    --text: #fafafa;
+    --text-2: #a1a1aa;
+    --text-3: #71717a;
+    --accent: #f97316;
+    --accent-dim: #f9731620;
+    --green: #22c55e;
+    --green-dim: #22c55e18;
+    --yellow: #eab308;
+    --yellow-dim: #eab30818;
+    --red: #ef4444;
+    --red-dim: #ef444418;
+    --blue: #3b82f6;
+    --blue-dim: #3b82f618;
+    --purple: #a78bfa;
+    --purple-dim: #a78bfa18;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Instrument Serif', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+  /* ---- HEADER ---- */
+  header { padding: 48px 0 40px; border-bottom: 1px solid var(--border); }
+
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+
+  .header-title { font-family: var(--serif); font-size: 42px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; }
+  .header-title em { font-style: italic; color: var(--accent); }
+
+  .header-meta { text-align: right; }
+  .header-meta .updated { font-family: var(--mono); font-size: 12px; color: var(--text-3); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .alert-badge {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 4px 12px;
+    background: var(--red-dim); border: 1px solid var(--red); border-radius: 4px;
+    font-family: var(--mono); font-size: 11px; color: var(--red); letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .alert-badge::before { content: ''; width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .product-context {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  }
+  .context-item { background: var(--surface); padding: 16px 20px; }
+  .context-label { font-family: var(--mono); font-size: 10px; color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .context-value { font-size: 13px; color: var(--text-2); }
+
+  /* ---- NAV ---- */
+  nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .nav-inner { display: flex; gap: 0; overflow-x: auto; }
+  .nav-tab {
+    padding: 16px 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-3); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;
+    background: none; border-top: none; border-left: none; border-right: none; font-weight: 400; white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--text-2); }
+  .nav-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-count {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px;
+    padding: 0 5px; margin-left: 8px; background: var(--surface-3); border-radius: 9px; font-size: 10px; color: var(--text-3);
+  }
+  .nav-tab.active .tab-count { background: var(--accent-dim); color: var(--accent); }
+
+  /* ---- SECTIONS ---- */
+  .section { display: none; padding: 40px 0 60px; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 32px; }
+  .section-title { font-family: var(--serif); font-size: 28px; font-weight: 400; }
+  .section-subtitle { font-family: var(--mono); font-size: 11px; color: var(--text-3); letter-spacing: 0.05em; }
+
+  /* ---- CARDS ---- */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .card-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--border-light); }
+  .card-full { grid-column: 1 / -1; }
+
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+
+  .card-tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 3px; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .tag-critical { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+  .tag-warning { background: var(--yellow-dim); color: var(--yellow); border: 1px solid var(--yellow); }
+  .tag-positive { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+  .tag-info { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue); }
+  .tag-neutral { background: var(--surface-3); color: var(--text-3); border: 1px solid var(--border); }
+  .tag-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple); }
+
+  .card-date { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+  .card-title { font-size: 16px; font-weight: 500; margin-bottom: 10px; line-height: 1.4; }
+  .card-body { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-bottom: 16px; }
+  .card-action { font-family: var(--mono); font-size: 12px; color: var(--accent); padding: 8px 0; border-top: 1px solid var(--border); }
+  .card-action::before { content: '→ '; }
+
+  /* ---- TABLES ---- */
+  .heatmap { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .heatmap th {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-3); padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 400;
+  }
+  .heatmap td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .heatmap tr:hover td { background: var(--surface-2); }
+  .platform-name { font-weight: 500; color: var(--text); min-width: 140px; }
+  .risk-high { color: var(--red); }
+  .risk-med { color: var(--yellow); }
+  .risk-low { color: var(--green); }
+  .risk-none { color: var(--text-3); }
+
+  /* ---- TIMELINE ---- */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px; background: var(--border); }
+  .timeline-item { position: relative; padding-bottom: 28px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -28px; top: 8px; width: 9px; height: 9px;
+    border-radius: 50%; border: 2px solid var(--border-light); background: var(--bg);
+  }
+  .timeline-item.highlight::before { border-color: var(--accent); background: var(--accent); }
+  .timeline-item.red::before { border-color: var(--red); background: var(--red); }
+  .timeline-date { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-bottom: 6px; }
+  .timeline-content { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+  .timeline-content strong { color: var(--text); font-weight: 500; }
+
+  /* ---- KEY METRIC ---- */
+  .key-metric {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 32px; text-align: center; margin-bottom: 24px;
+  }
+  .key-metric .metric-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; }
+  .key-metric .metric-value { font-family: var(--serif); font-size: 56px; font-weight: 400; color: var(--text); line-height: 1; margin-bottom: 8px; }
+  .key-metric .metric-unit { font-family: var(--mono); font-size: 14px; color: var(--text-3); }
+  .key-metric .metric-trend { font-family: var(--mono); font-size: 13px; margin-top: 12px; }
+  .change-down { color: var(--green); }
+
+  /* ---- RESTRUCTURING TRACKER ---- */
+  .tracker-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+  .tracker-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .tracker-card:hover { border-color: var(--border-light); }
+  .tracker-retailer { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .tracker-status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .tracker-detail { font-size: 12px; color: var(--text-2); line-height: 1.55; margin-bottom: 12px; }
+  .tracker-metric { font-family: var(--mono); font-size: 11px; color: var(--text-3); padding-top: 10px; border-top: 1px solid var(--border); }
+  .tracker-metric strong { color: var(--text-2); }
+
+  /* ---- PRICING ---- */
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+  .price-card .provider { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+  .price-card .model-name { font-size: 18px; font-weight: 500; margin-bottom: 16px; }
+  .price-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--border); }
+  .price-label { font-size: 12px; color: var(--text-3); }
+  .price-value { font-family: var(--mono); font-size: 14px; font-weight: 500; }
+  .price-change { font-family: var(--mono); font-size: 11px; margin-left: 8px; }
+  .change-flat { color: var(--text-3); }
+
+  .sparkline { display: flex; align-items: flex-end; gap: 3px; height: 40px; margin: 16px 0 8px; }
+  .sparkline-bar { flex: 1; background: var(--surface-3); border-radius: 2px 2px 0 0; min-height: 3px; }
+  .sparkline-bar:last-child { background: var(--accent); }
+  .sparkline-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; color: var(--text-3); }
+
+  /* ---- CALC ---- */
+  .calc-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; margin-bottom: 24px; }
+  .calc-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 20px; }
+  .calc-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .calc-row:last-child { border-bottom: none; }
+  .calc-task { font-size: 14px; color: var(--text); }
+  .calc-vol { font-family: var(--mono); font-size: 12px; color: var(--text-3); text-align: right; }
+  .calc-cost { font-family: var(--mono); font-size: 14px; text-align: right; }
+  .calc-savings { font-family: var(--mono); font-size: 12px; text-align: right; color: var(--green); }
+  .calc-total { display: flex; justify-content: space-between; align-items: baseline; padding: 20px 0 0; margin-top: 8px; border-top: 2px solid var(--border-light); }
+
+  /* ---- REVEAL ---- */
+  .reveal { opacity: 0; transform: translateY(12px); animation: reveal 0.5s ease forwards; }
+  .reveal:nth-child(1) { animation-delay: 0.05s; }
+  .reveal:nth-child(2) { animation-delay: 0.1s; }
+  .reveal:nth-child(3) { animation-delay: 0.15s; }
+  .reveal:nth-child(4) { animation-delay: 0.2s; }
+  .reveal:nth-child(5) { animation-delay: 0.25s; }
+  @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+
+  .dashboard-footer {
+    border-top: 1px solid var(--border); padding: 24px 0; margin-top: 40px;
+    font-family: var(--mono); font-size: 11px; color: var(--text-3); display: flex; justify-content: space-between;
+  }
+
+  @media (max-width: 1100px) {
+    .tracker-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .container { padding: 0 20px; }
+    .product-context { grid-template-columns: repeat(2, 1fr); }
+    .card-grid, .card-grid.triple, .pricing-grid { grid-template-columns: 1fr; }
+    .tracker-grid { grid-template-columns: 1fr 1fr; }
+    .header-title { font-size: 28px; }
+    .calc-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <div class="header-top">
+    <div>
+      <h1 class="header-title">Tech <em>Radar</em></h1>
+    </div>
+    <div class="header-meta">
+      <div class="updated">Updated 18 Mar 2026</div>
+      <div class="alert-badge">4 alerts this week</div>
+    </div>
+  </div>
+
+  <div class="product-context">
+    <div class="context-item">
+      <div class="context-label">Product</div>
+      <div class="context-value">Leadership Pipeline AI — enabling management layer compression at Level 2 (Manage Others)</div>
+    </div>
+    <div class="context-item">
+      <div class="context-label">Target Segment</div>
+      <div class="context-value">UK Grocery · Large-format & standard supermarkets · 8K–18K L2 managers per retailer</div>
+    </div>
+    <div class="context-item">
+      <div class="context-label">Model Stack</div>
+      <div class="context-value">GPT-5 (complex decisions) · Gemini 3 Flash (daily ops) · Sonnet 4.6 (coaching/analysis)</div>
+    </div>
+    <div class="context-item">
+      <div class="context-label">Key Capabilities</div>
+      <div class="context-value">Agentic workflows · Voice STT · Multilingual NLP · Scheduling optimisation · Sentiment analysis</div>
+    </div>
+    <div class="context-item">
+      <div class="context-label">Market Timing</div>
+      <div class="context-value" style="color: var(--green);">● Active restructuring wave — Tesco, Sainsbury's, Asda, Co-op cutting L2 now</div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container nav-inner">
+    <button class="nav-tab active" onclick="showSection('restructuring')">Restructuring<span class="tab-count">5</span></button>
+    <button class="nav-tab" onclick="showSection('capabilities')">Capabilities<span class="tab-count">6</span></button>
+    <button class="nav-tab" onclick="showSection('platform')">Platform Risk<span class="tab-count">4</span></button>
+    <button class="nav-tab" onclick="showSection('vertical')">Vertical Pulse<span class="tab-count">7</span></button>
+    <button class="nav-tab" onclick="showSection('economics')">Economics<span class="tab-count">3</span></button>
+  </div>
+</nav>
+
+<!-- ============ SECTION 1: RESTRUCTURING TRACKER ============ -->
+<div class="section active" id="restructuring">
+  <div class="section-header">
+    <h2 class="section-title">Restructuring Tracker</h2>
+    <span class="section-subtitle">Live management layer compression across UK grocery · your market signal</span>
+  </div>
+
+  <div class="tracker-grid reveal">
+    <div class="tracker-card" style="border-color: var(--red);">
+      <div class="tracker-retailer">Tesco</div>
+      <div class="tracker-status" style="color: var(--red);">● Active pilot</div>
+      <div class="tracker-detail">13 East Midlands stores: Team Leader roles eliminated. Department Managers rebranded "Team Managers." Grocery + warehouse merged. If pilot succeeds → full estate rollout (2,000+ stores).</div>
+      <div class="tracker-detail">Previous: 1,750 manager roles cut (2023), Deputy SM eliminated, Team Support removed in Extras.</div>
+      <div class="tracker-metric">L2 population: <strong>~15,000–18,000</strong> · 341K total workforce</div>
+    </div>
+    <div class="tracker-card" style="border-color: var(--red);">
+      <div class="tracker-retailer">Sainsbury's</div>
+      <div class="tracker-status" style="color: var(--red);">● Major restructure</div>
+      <div class="tracker-detail">Axing Deputy Manager, Department Manager, Team Leader, Store Supervisor. Replaced by fewer "Operations Managers" and combined "Customer and Trading Manager" role. 3,000 roles cut, 20% senior management reduction.</div>
+      <div class="tracker-metric">Target: <strong>£500M savings / 3yrs</strong> · 140K workforce</div>
+    </div>
+    <div class="tracker-card" style="border-color: var(--yellow);">
+      <div class="tracker-retailer">Asda</div>
+      <div class="tracker-status" style="color: var(--yellow);">● Consolidating</div>
+      <div class="tracker-detail">July 2025: Section Manager + Trading Manager merged into single "Manager" role. PE ownership (TDR Capital 67.5%) driving aggressive cost reduction. Further cuts expected.</div>
+      <div class="tracker-metric">L2 population: <strong>~10,000–12,000</strong> · ~115K workforce</div>
+    </div>
+    <div class="tracker-card" style="border-color: var(--yellow);">
+      <div class="tracker-retailer">Co-op</div>
+      <div class="tracker-status" style="color: var(--yellow);">● Completed</div>
+      <div class="tracker-detail">Four management tiers collapsed to three. 2,000+ roles impacted. Restructuring largely complete — now dealing with consequences (remaining managers stretched).</div>
+      <div class="tracker-metric">L2 population: <strong>~4,000–5,000</strong> · ~56K workforce</div>
+    </div>
+    <div class="tracker-card" style="border-color: var(--green);">
+      <div class="tracker-retailer">Waitrose</div>
+      <div class="tracker-status" style="color: var(--text-3);">● Done</div>
+      <div class="tracker-detail">"Simpler Shops": 678 roles cut, departmental silos removed. Partnership model complicates further cuts. Focus shifting to capability, not headcount.</div>
+      <div class="tracker-metric">L2 population: <strong>~3,000–4,000</strong> · ~74K JLP total</div>
+    </div>
+  </div>
+
+  <!-- The insight card -->
+  <div class="card-grid reveal">
+    <div class="card card-full" style="border-color: var(--accent); border-width: 1px;">
+      <div class="card-header">
+        <span class="card-tag tag-critical">Strategic Insight</span>
+        <span class="card-date">18 Mar 2026</span>
+      </div>
+      <div class="card-title">The value prop has shifted: not "reduce L2" but "make L2 reduction survivable"</div>
+      <div class="card-body">
+        Retailers are already cutting management layers — independently of any AI product. Tesco, Sainsbury's, Asda, Co-op, Waitrose have all compressed Level 2 in the past 18 months. The product doesn't need to sell "eliminate managers." It needs to sell: "You've just cut 30% of your management layer. The remaining managers need support to handle the expanded scope, or store performance collapses." This is a much stronger and more urgent sales narrative — and it's happening right now, not hypothetically.
+      </div>
+      <div class="card-action">The buying conversation is with People Director / CPO. Frame as risk mitigation for restructuring already underway.</div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-warning">Economic Driver</span>
+      </div>
+      <div class="card-title">NLW compression is killing the management pay premium</div>
+      <div class="card-body">
+        National Living Wage rises to £12.71/hr from April 2026. Customer Assistant at NLW vs Department Manager at £13–15/hr = minimal premium for taking on people responsibility. "Why bother?" problem: fewer people want management roles, those who do are less motivated. Retailers respond by eliminating roles and paying remaining managers more. This creates the exact population your product serves — fewer, more stretched managers.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-info">Union Signal</span>
+      </div>
+      <div class="card-title">USDAW position on AI in workforce management — watch carefully</div>
+      <div class="card-body">
+        USDAW represents ~360K members at Tesco, Sainsbury's, Morrisons, Co-op, Asda. Won Supreme Court case vs Tesco (2024) on "fire and rehire." USDAW will have a formal position on AI-assisted management. Product must be positioned as "supporting managers" not "replacing managers" in any retailer with USDAW recognition. GTM language matters enormously.
+      </div>
+    </div>
+  </div>
+
+  <!-- Restructuring timeline -->
+  <div class="card card-full reveal" style="margin-top: 8px;">
+    <div class="card-header">
+      <span class="card-tag tag-neutral">Timeline</span>
+    </div>
+    <div class="card-title" style="margin-bottom: 24px;">Restructuring wave timeline</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">2023</div>
+        <div class="timeline-content"><strong>Tesco cuts 1,750 manager roles.</strong> Deputy Store Manager eliminated in standard format. First wave of compression.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Early 2025</div>
+        <div class="timeline-content"><strong>Waitrose "Simpler Shops"</strong> — 678 roles cut, departmental silos removed. <strong>Co-op</strong> collapses four tiers to three.</div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-date">Mid 2025</div>
+        <div class="timeline-content"><strong>Sainsbury's "Next Level" restructure announced.</strong> Deputy Manager, Department Manager, Team Leader, Store Supervisor all axed. £500M savings target. The most radical compression in the sector.</div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-date">Jul 2025</div>
+        <div class="timeline-content"><strong>Asda merges Section Manager + Trading Manager.</strong> PE ownership driving aggressive cost compression.</div>
+      </div>
+      <div class="timeline-item red">
+        <div class="timeline-date">Q1 2026 — NOW</div>
+        <div class="timeline-content"><strong>Tesco 13-store East Midlands pilot</strong> — Team Leader eliminated, roles merged. If successful → full rollout. <strong>This is the trigger moment for your product.</strong> Remaining managers will need Pipeline-specific support tools within 6–12 months.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Apr 2026</div>
+        <div class="timeline-content"><strong>NLW rises to £12.71/hr.</strong> Management pay premium compresses further. Accelerates next wave of restructuring at Morrisons, M&S, Iceland.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">H2 2026 (projected)</div>
+        <div class="timeline-content"><strong>Tesco pilot results → rollout decision.</strong> If yes, 2,000+ stores affected. Aldi/Lidl continue expanding (targeting 1,500 and 1,100+ stores) — already flat structure, different opportunity.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SECTION 2: CAPABILITIES ============ -->
+<div class="section" id="capabilities">
+  <div class="section-header">
+    <h2 class="section-title">Capability Watch</h2>
+    <span class="section-subtitle">AI capabilities relevant to Pipeline management in grocery stores</span>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-critical">High Impact</span>
+        <span class="card-date">13 Mar 2026</span>
+      </div>
+      <div class="card-title">Anthropic flat 1M-token context — full store context in one pass</div>
+      <div class="card-body">
+        Sonnet 4.6 now processes 1M tokens at $3/$15, no surcharge. For your product: a Team Manager's entire context — 3 months of shift data, performance reviews, incident logs, employee comms, scheduling history — fits in a single context window. No RAG chunking needed for store-level analysis. Quarterly Pipeline diagnostic per manager: ~400K tokens → $1.20 per run.
+      </div>
+      <div class="card-action">Prototype: "Complete Pipeline Health Report" per manager — ingest all store data, output coaching recommendations in one pass</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-critical">High Impact</span>
+        <span class="card-date">Current</span>
+      </div>
+      <div class="card-title">Voice STT now viable for on-floor use — sub-300ms, £0.006/min</div>
+      <div class="card-body">
+        Deepgram Nova-3 at sub-300ms latency. Whisper API at $0.006/min. NVIDIA Canary at 5.63% WER. Critical for your users: Team Managers in grocery stores are on their feet 8+ hours, hands occupied (stock, equipment, customer interactions). Voice is the natural interface — not typing on a tablet. A shift handover summary via voice: ~5 min audio = $0.03 per handover.
+      </div>
+      <div class="card-action">Voice-first interface for shift handovers, incident logging, coaching notes. This is a differentiator — WFM incumbents don't have this.</div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-warning">Multilingual</span>
+        <span class="card-date">Current</span>
+      </div>
+      <div class="card-title">Multilingual NLP is production-ready — critical for UK grocery workforce</div>
+      <div class="card-body">
+        UK grocery frontline is heavily multilingual: Polish, Romanian, Hindi, Urdu, Bengali, Portuguese communities across the workforce. Qwen 3.5 leads CJK and non-Latin scripts (200+ languages). GPT-5.2 leads European languages (BLEU 65–73). For your product: a Team Manager communicating with a Polish-speaking team needs comms support in their language. Sentiment analysis on employee feedback across languages enables early warning of team issues.
+      </div>
+      <div class="card-action">Multilingual support is a differentiator vs generic WFM tools. Route: Qwen 3.5 for Eastern European languages, GPT-5 for core English processing.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-positive">Opportunity</span>
+        <span class="card-date">8 Mar 2026</span>
+      </div>
+      <div class="card-title">GPT-5 Nano at $0.05/MTok — always-on Pipeline agent per manager becomes viable</div>
+      <div class="card-body">
+        At this price: continuous background monitoring agent per Team Manager = ~£2/manager/month. 15,000 L2 managers at Tesco → £30K/month total inference. Agent watches scheduling patterns, time allocation, escalation frequency, team sentiment — flags Pipeline transition failures in real-time, not quarterly reviews.
+      </div>
+      <div class="card-action">Design always-on monitoring agent architecture. This enables the shift from "diagnostic tool" to "continuous Pipeline guardian."</div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-info">Agentic</span>
+        <span class="card-date">Current</span>
+      </div>
+      <div class="card-title">Agentic reliability at 87% for structured 5-step workflows — your core flows are 8–12 steps</div>
+      <div class="card-body">
+        Task completion doubling every ~7 months. Current: 87% for structured 5+ step workflows. Your core flows (schedule → assign → notify → track → escalate → review → coach → report) are 8–12 steps. At current trajectory: 90%+ reliability for your complexity level expected Q4 2026. Today: need human-in-the-loop for steps 6+. By Q4: near-autonomous for routine operational flows.
+      </div>
+      <div class="card-action">Ship with human-in-the-loop now, architecture for autonomous mode. Pre-build the toggle for Q4 2026.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-info">Embeddings</span>
+        <span class="card-date">10 Mar 2026</span>
+      </div>
+      <div class="card-title">Gemini Embedding 2 — multimodal search across all store data types</div>
+      <div class="card-body">
+        First natively multimodal embedding model: text, images, video, audio, PDFs → single vector space. For your product: "Show me everything about Team Manager Sarah's performance last month" — searches shift schedules (text), incident photos (image), voice memos (audio), training certificates (PDF) in one query. Unified Pipeline intelligence across data types.
+      </div>
+      <div class="card-action">Prototype multimodal Pipeline search — long-term differentiator, hard for incumbents to replicate</div>
+    </div>
+  </div>
+
+  <!-- Stack snapshot -->
+  <div class="card card-full reveal">
+    <div class="card-header">
+      <span class="card-tag tag-neutral">Your Stack</span>
+    </div>
+    <table class="heatmap">
+      <thead>
+        <tr>
+          <th>Capability needed</th>
+          <th>Current model</th>
+          <th>Pipeline use case</th>
+          <th>Readiness</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="platform-name">Complex coaching / diagnostics</td>
+          <td>Sonnet 4.6</td>
+          <td>Pipeline transition assessment, development plans</td>
+          <td class="risk-low">Ready</td>
+          <td style="color:var(--accent);">Core — live</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Daily ops automation</td>
+          <td>Gemini 3 Flash</td>
+          <td>Schedule optimisation, routine comms, reporting</td>
+          <td class="risk-low">Ready</td>
+          <td style="color:var(--accent);">Core — live</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Decision support (HR, compliance)</td>
+          <td>GPT-5</td>
+          <td>Employment Rights Act compliance, grievance handling</td>
+          <td class="risk-low">Ready</td>
+          <td style="color:var(--accent);">Core — live</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Voice / STT for on-floor use</td>
+          <td>Not yet — Deepgram Nova-3 recommended</td>
+          <td>Shift handovers, incident logging, coaching notes</td>
+          <td class="risk-med">Ready — needs integration</td>
+          <td style="color:var(--yellow);">High — next sprint</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Multilingual NLP (PL, RO, HI, UR)</td>
+          <td>Gemini 3 Flash + Qwen 3.5 for edge cases</td>
+          <td>Team comms, sentiment, employee feedback</td>
+          <td class="risk-med">Near-ready</td>
+          <td style="color:var(--yellow);">High — differentiator</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Always-on monitoring agent</td>
+          <td>GPT-5 Nano (candidate)</td>
+          <td>Continuous Pipeline health, early warning</td>
+          <td class="risk-med">Viable at cost — reliability gap</td>
+          <td style="color:var(--text-3);">Q4 2026 target</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Multimodal store search</td>
+          <td>Gemini Embedding 2 (candidate)</td>
+          <td>Unified Pipeline intelligence across data types</td>
+          <td class="risk-high" style="color:var(--yellow);">Early — prototype</td>
+          <td style="color:var(--text-3);">2027 roadmap</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============ SECTION 3: PLATFORM RISK ============ -->
+<div class="section" id="platform">
+  <div class="section-header">
+    <h2 class="section-title">Platform Risk Monitor</h2>
+    <span class="section-subtitle">WFM incumbents, HR tech, and AI platforms — who threatens your space</span>
+  </div>
+
+  <div class="card card-full reveal" style="margin-bottom:24px;">
+    <div class="card-header">
+      <span class="card-tag tag-neutral">Risk Matrix</span>
+      <span class="card-date">Updated 18 Mar 2026</span>
+    </div>
+    <table class="heatmap">
+      <thead>
+        <tr>
+          <th>Competitor / Platform</th>
+          <th>L2 Pipeline coaching</th>
+          <th>Ops automation</th>
+          <th>UK grocery depth</th>
+          <th>Overall threat</th>
+          <th>Timeline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="platform-name">UKG / Kronos (WFM incumbent)</td>
+          <td class="risk-none">None</td>
+          <td class="risk-high">HIGH</td>
+          <td class="risk-high">HIGH</td>
+          <td class="risk-high">■ HIGH</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--text-3);">Already deployed</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Workday + Paradox + Sana Labs</td>
+          <td class="risk-med">MED</td>
+          <td class="risk-med">MED</td>
+          <td class="risk-low">LOW</td>
+          <td class="risk-med">■ MED</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--text-3);">12–18 mo</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Reflexis / Zebra (retail-specific WFM)</td>
+          <td class="risk-none">None</td>
+          <td class="risk-high">HIGH</td>
+          <td class="risk-high">HIGH</td>
+          <td class="risk-med">■ MED</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--text-3);">Already deployed</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Microsoft Copilot / Cowork</td>
+          <td class="risk-low">LOW</td>
+          <td class="risk-med">MED</td>
+          <td class="risk-none">None</td>
+          <td class="risk-low">■ LOW</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--text-3);">6–12 mo</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Deputy (WFM, Series D $100M)</td>
+          <td class="risk-none">None</td>
+          <td class="risk-med">MED</td>
+          <td class="risk-med">MED</td>
+          <td class="risk-low">■ LOW</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--text-3);">Expanding to UK</td>
+        </tr>
+        <tr>
+          <td class="platform-name">Oracle Retail (AI Workforce Planner)</td>
+          <td class="risk-low">LOW</td>
+          <td class="risk-med">MED</td>
+          <td class="risk-high">HIGH</td>
+          <td class="risk-med">■ MED</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--text-3);">12–18 mo to GA</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card card-full" style="border-color: var(--green);">
+      <div class="card-header">
+        <span class="card-tag tag-positive">Your Moat</span>
+      </div>
+      <div class="card-title">Why "Leadership Pipeline coaching" is structurally defensible</div>
+      <div class="card-body" style="margin-bottom: 0;">
+        Every competitor in the matrix above does operational automation — scheduling, time tracking, task management. <strong>None of them do Pipeline-specific leadership development.</strong> UKG/Kronos optimises shifts, not managers. Workday manages HR records, not L1→L2 transitions. Reflexis tracks task execution, not whether a Team Manager is spending time on the right Pipeline-level work.<br><br>
+        Your product occupies a unique intersection: operational data (what's happening in the store) + Pipeline framework (what should a Level 2 manager be doing differently). This intersection requires both domain expertise (Gorr's Pipeline model adapted for UK grocery) and technical integration depth (WFM, POS, HR systems). An AI platform can't replicate the domain model in a sprint, and a WFM incumbent doesn't have the conceptual framework.<br><br>
+        <strong>Defensibility score: STRONG on domain model + workflow depth. WEAK on distribution and data moat (too early).</strong> The urgent investment is in channel partnerships with consulting firms who advise UK grocery on restructuring — Accenture retail, KPMG retail, McKinsey consumer practice.
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-warning">Monitor</span>
+        <span class="card-date">12 Mar 2026</span>
+      </div>
+      <div class="card-title">Workday acquires Paradox + Sana Labs ($1.1B) — AI for HR</div>
+      <div class="card-body">
+        Workday ($2.5B quarterly revenue) is aggressively adding AI to HR workflows. Paradox = conversational AI recruiting. Sana Labs = AI learning platform. Combined: they'll have AI-powered talent management, scheduling, and L&D. Not Pipeline-specific, but could evolve toward manager effectiveness tools. Monitor their product announcements at Rising (October 2026).
+      </div>
+      <div class="card-action">Differentiate on Pipeline framework specificity + UK grocery depth. Workday is horizontal; you're vertical.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-info">Hiring Signal</span>
+        <span class="card-date">Ongoing</span>
+      </div>
+      <div class="card-title">Oracle Retail — 14 new "AI workforce optimization" roles (60 days)</div>
+      <div class="card-body">
+        Oracle Retail has ~35% UK grocery market share (strong in large-format). Adding AI features to Cloud Retail Suite. Likely 12–18 months to GA based on Oracle's typical shipping speed. Threat: if Oracle ships native AI workforce features, your pipeline in Oracle-heavy accounts (Tesco, Morrisons) becomes contested.
+      </div>
+      <div class="card-action">Target non-Oracle accounts first (Sainsbury's, Aldi, Lidl). For Oracle shops: position as "best-of-breed" that integrates, not replaces.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SECTION 4: VERTICAL PULSE ============ -->
+<div class="section" id="vertical">
+  <div class="section-header">
+    <h2 class="section-title">Vertical Pulse</h2>
+    <span class="section-subtitle">UK grocery · workforce AI · regulatory · global signals</span>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-critical">Regulation</span>
+        <span class="card-date">Enforcement Aug 2026</span>
+      </div>
+      <div class="card-title">EU AI Act: workforce monitoring = HIGH RISK (Article 6 Annex III §4)</div>
+      <div class="card-body">
+        AI systems monitoring employee performance, allocating tasks, or making decisions affecting workers are explicitly classified as high-risk. Requires: conformity assessment, transparency, human oversight, record-keeping. Only 3 of 27 Member States have designated authorities. For UK: not directly applicable post-Brexit, but UK retailers with EU operations (Tesco Poland, Tesco Hungary) will need compliance. Also sets industry expectation — UK regulators will reference it.
+      </div>
+      <div class="card-action">Pre-build EU compliance framework. This is both barrier-to-entry (competitors won't bother) and sales argument (retailers want vendors who've already solved this).</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-warning">UK Regulation</span>
+        <span class="card-date">2025–2026</span>
+      </div>
+      <div class="card-title">Employment Rights Act 2025 + upcoming secondary legislation</div>
+      <div class="card-body">
+        SSP now payable from day one (not day 4). Zero-hours contracts reformed. Flexible working default. Each change adds compliance overhead per manager. Secondary legislation expected H2 2026 — may include provisions on algorithmic management. Your product can embed compliance checks into daily manager workflows — a feature WFM tools don't have.
+      </div>
+      <div class="card-action">Build Employment Rights Act compliance assistant into product. Every compliance check a manager does through your tool = lock-in + data moat.</div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-positive">Market Signal</span>
+        <span class="card-date">Mar 2026</span>
+      </div>
+      <div class="card-title">UK Big 4 increasing tech budgets 15–25% YoY — but demanding ROI in 12 months</div>
+      <div class="card-body">
+        Budget exists and is growing. But: "active pause" on speculative AI. 67% prefer to buy over build. Vendor fatigue is real. The winners: products that show measurable value in weeks, not months. Your 4-week proof-of-value at a single store is the right playbook.
+      </div>
+      <div class="card-action">Build the single-store PoV playbook: deploy week 1, measure L2 time allocation week 2–3, report ROI week 4. Then expansion PO.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-purple">Buyer Signal</span>
+        <span class="card-date">Ongoing</span>
+      </div>
+      <div class="card-title">People Director / CPO is your buyer — but CTO/CIO is gatekeeper</div>
+      <div class="card-body">
+        People function owns the restructuring problem. Tech function owns vendor approval and integration. Product must pass both gates. UK grocery CIOs are cautious — Tesco Tech is one of largest retail tech teams in UK. Need: SOC 2, integration with existing WFM (UKG, Reflexis), SSO, data residency in UK.
+      </div>
+      <div class="card-action">Build technical sales collateral for CIO gate: architecture diagram showing integration with UKG/Reflexis, not replacement. Data stays in UK.</div>
+    </div>
+  </div>
+
+  <!-- Regulatory timeline -->
+  <div class="card card-full reveal" style="margin-top: 8px;">
+    <div class="card-header">
+      <span class="card-tag tag-neutral">Regulatory Timeline</span>
+    </div>
+    <div class="timeline" style="margin-top:16px;">
+      <div class="timeline-item highlight">
+        <div class="timeline-date">Apr 2026</div>
+        <div class="timeline-content"><strong>NLW rises to £12.71/hr.</strong> Management pay premium compresses. Accelerates restructuring at remaining retailers.</div>
+      </div>
+      <div class="timeline-item red">
+        <div class="timeline-date">2 Aug 2026</div>
+        <div class="timeline-content"><strong>EU AI Act high-risk rules effective.</strong> Workforce monitoring requires conformity assessment. Affects Tesco Poland/Hungary, any retailer with EU ops.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">H2 2026 (expected)</div>
+        <div class="timeline-content"><strong>UK Employment Rights Act secondary legislation.</strong> May include algorithmic management provisions. EHRC guidance anticipated.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Q1 2027</div>
+        <div class="timeline-content"><strong>EU AI Act full enforcement.</strong> Fines up to €35M or 7% global turnover. First actions expected against visible targets.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global -->
+  <div class="card-grid triple reveal" style="margin-top:24px;">
+    <div class="card">
+      <div class="card-header"><span class="card-tag tag-info">Format Model</span></div>
+      <div class="card-title">Aldi/Lidl = different product play</div>
+      <div class="card-body">Already flat structure (no L2 Department Manager layer). Store Manager directly manages 25–60. Different Pipeline problem: L1→L2 happens in one jump. Growing fast (Aldi targeting 1,500 stores). Adjacent opportunity, different features.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-tag tag-info">Global</span></div>
+      <div class="card-title">Singapore 60%+ workforce AI adoption</div>
+      <div class="card-body">Government-led. Less regulatory friction than EU. UK grocery retailers with international ops (Tesco, Aldi, Lidl) could be pathway to global. But: different org structures, different labour laws per market.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-tag tag-info">Adjacent</span></div>
+      <div class="card-title">Big Four investing $10B+ in AI for professional services</div>
+      <div class="card-body">Same Pipeline problem in different vertical: removing management layers while maintaining effectiveness. KPMG, Deloitte, PwC, EY all doing this internally. Potential channel partners — and eventual customers for a horizontal Pipeline product.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SECTION 5: ECONOMICS ============ -->
+<div class="section" id="economics">
+  <div class="section-header">
+    <h2 class="section-title">Economics Tracker</h2>
+    <span class="section-subtitle">AI cost structure for Pipeline AI · modelled on Tesco-scale deployment</span>
+  </div>
+
+  <div class="key-metric reveal">
+    <div class="metric-label">AI Cost Per L2 Manager Per Month</div>
+    <div class="metric-value">£3.20</div>
+    <div class="metric-unit">Full Pipeline monitoring, coaching, ops automation, and reporting</div>
+    <div class="metric-trend change-down">↓ 41% from £5.40 in January · driven by Nano routing + flat long-context pricing</div>
+  </div>
+
+  <div class="pricing-grid reveal">
+    <div class="price-card">
+      <div class="provider">OpenAI</div>
+      <div class="model-name">GPT-5 + Nano</div>
+      <div class="price-row"><span class="price-label">GPT-5 Input</span><span class="price-value">$1.25</span></div>
+      <div class="price-row"><span class="price-label">Nano Input</span><span class="price-value">$0.05<span class="price-change change-down">↓ new</span></span></div>
+      <div class="price-row"><span class="price-label">Your routing</span><span class="price-value" style="color:var(--text-2);">15% GPT-5, 40% Nano</span></div>
+      <div class="sparkline">
+        <div class="sparkline-bar" style="height:100%"></div>
+        <div class="sparkline-bar" style="height:85%"></div>
+        <div class="sparkline-bar" style="height:50%"></div>
+        <div class="sparkline-bar" style="height:35%"></div>
+        <div class="sparkline-bar" style="height:15%"></div>
+        <div class="sparkline-bar" style="height:10%"></div>
+      </div>
+      <div class="sparkline-labels"><span>Oct 25</span><span>Mar 26</span></div>
+    </div>
+    <div class="price-card">
+      <div class="provider">Google</div>
+      <div class="model-name">Gemini 3 Flash</div>
+      <div class="price-row"><span class="price-label">Input</span><span class="price-value">$0.50<span class="price-change change-down">↓ 50%</span></span></div>
+      <div class="price-row"><span class="price-label">Output</span><span class="price-value">$3.00</span></div>
+      <div class="price-row"><span class="price-label">Your routing</span><span class="price-value" style="color:var(--text-2);">30% of calls</span></div>
+      <div class="sparkline">
+        <div class="sparkline-bar" style="height:100%"></div>
+        <div class="sparkline-bar" style="height:80%"></div>
+        <div class="sparkline-bar" style="height:55%"></div>
+        <div class="sparkline-bar" style="height:30%"></div>
+        <div class="sparkline-bar" style="height:20%"></div>
+        <div class="sparkline-bar" style="height:18%"></div>
+      </div>
+      <div class="sparkline-labels"><span>Oct 25</span><span>Mar 26</span></div>
+    </div>
+    <div class="price-card">
+      <div class="provider">Anthropic</div>
+      <div class="model-name">Sonnet 4.6</div>
+      <div class="price-row"><span class="price-label">Input (1M flat)</span><span class="price-value">$3.00<span class="price-change change-down">↓ no surcharge</span></span></div>
+      <div class="price-row"><span class="price-label">Output</span><span class="price-value">$15.00</span></div>
+      <div class="price-row"><span class="price-label">Your routing</span><span class="price-value" style="color:var(--text-2);">15% of calls (complex)</span></div>
+      <div class="sparkline">
+        <div class="sparkline-bar" style="height:100%"></div>
+        <div class="sparkline-bar" style="height:100%"></div>
+        <div class="sparkline-bar" style="height:100%"></div>
+        <div class="sparkline-bar" style="height:100%"></div>
+        <div class="sparkline-bar" style="height:70%"></div>
+        <div class="sparkline-bar" style="height:70%"></div>
+      </div>
+      <div class="sparkline-labels"><span>Oct 25</span><span>Mar 26</span></div>
+    </div>
+  </div>
+
+  <div class="calc-section reveal">
+    <div class="calc-title">Tesco-scale scenario — 2,000 stores · ~15,000 L2 managers</div>
+    <div class="calc-row" style="border-bottom: 1px solid var(--border-light);">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;">Pipeline AI Task</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;text-align:right;">Monthly vol</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;text-align:right;">Model → cost</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;text-align:right;">Per manager</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-task">Always-on Pipeline monitoring</div>
+      <div class="calc-vol">15K agents × daily</div>
+      <div class="calc-cost">Nano → $6,750</div>
+      <div class="calc-savings">$0.45</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-task">Shift scheduling + task allocation</div>
+      <div class="calc-vol">60K sessions</div>
+      <div class="calc-cost">Flash → $3,600</div>
+      <div class="calc-savings">$0.24</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-task">Voice shift handovers (STT + summary)</div>
+      <div class="calc-vol">90K handovers × 5min</div>
+      <div class="calc-cost">Deepgram → $2,700</div>
+      <div class="calc-savings">$0.18</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-task">Weekly coaching recommendations</div>
+      <div class="calc-vol">15K reports</div>
+      <div class="calc-cost">Sonnet → $9,000</div>
+      <div class="calc-savings">$0.60</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-task">Employee comms + sentiment (multilingual)</div>
+      <div class="calc-vol">200K messages</div>
+      <div class="calc-cost">Flash + Qwen → $2,400</div>
+      <div class="calc-savings">$0.16</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-task">Compliance checks (Employment Rights Act)</div>
+      <div class="calc-vol">30K checks</div>
+      <div class="calc-cost">GPT-5 → $4,500</div>
+      <div class="calc-savings">$0.30</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-task">Monthly Pipeline diagnostics (full context)</div>
+      <div class="calc-vol">15K reports × 400K tok</div>
+      <div class="calc-cost">Sonnet 1M → $18,000</div>
+      <div class="calc-savings">$1.20</div>
+    </div>
+    <div class="calc-total">
+      <div>
+        <div style="font-size:14px;color:var(--text-2);">Total AI inference · 15,000 managers · 2,000 stores</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text-3);margin-top:4px;">Full Pipeline AI stack including STT, monitoring, coaching, compliance</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:var(--serif);font-size:36px;color:var(--accent);">£47K/mo</div>
+        <div style="font-family:var(--mono);font-size:12px;color:var(--green);margin-top:4px;">£3.13 per manager · £23.50 per store</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-positive">Unit Economics</span>
+      </div>
+      <div class="card-title">At £200/store/month pricing → AI COGS is 12%</div>
+      <div class="card-body">
+        £23.50 AI cost per store vs £200/store/month SaaS pricing = 12% AI COGS. At Tesco scale (2,000 stores) = £400K/month revenue, £47K AI cost. 88% gross margin on AI — plus engineering, data, ops costs bring effective gross margin to ~55-60%. Healthy for AI-native SaaS. Room to drop pricing for land-and-expand without margin collapse.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-tag tag-warning">ROI Story</span>
+      </div>
+      <div class="card-title">A Department Manager costs £28–35K/year. Your product costs £2,400/store/year.</div>
+      <div class="card-body">
+        If your product enables one fewer Department Manager per large-format store (which is exactly what Tesco/Sainsbury's are doing): £28K savings vs £2.4K product cost = 11.7x ROI. But frame differently: "You're already cutting the manager. The question is whether the £2,400 prevents £50K+ in performance degradation from an overwhelmed remaining team." This is insurance, not efficiency.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="container">
+  <div class="dashboard-footer">
+    <span>Tech Radar · PCL Technology Intelligence Framework · Pipeline AI for UK Grocery</span>
+    <span>Next update: 25 Mar 2026</span>
+  </div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.closest('.nav-tab').classList.add('active');
+  document.querySelectorAll(`#${id} .reveal`).forEach(el => {
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = '';
+  });
+}
+</script>
+
+</body>
+</html>
