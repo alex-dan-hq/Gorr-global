@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Radar v4.1 — Technology Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#08080a;--sf:#101012;--s2:#16161a;--s3:#1c1c21;
+    --bd:#25252a;--bl:#38383f;
+    --tx:#f0f0f2;--t2:#9d9da6;--t3:#6a6a74;
+    --ac:#e8742d;--ad:#e8742d1a;
+    --gn:#2dce70;--gd:#2dce7015;
+    --yl:#deb220;--yd:#deb22015;
+    --rd:#e54e4e;--rdd:#e54e4e15;
+    --bl2:#4d8df5;--bld:#4d8df515;
+    --pp:#9b7df5;--pd:#9b7df515;
+    --cn:#38bec9;--cd:#38bec915;
+    --mn:'DM Mono',monospace;--sr:'Instrument Serif',serif;--sn:'DM Sans',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--tx);font-family:var(--sn);line-height:1.6;-webkit-font-smoothing:antialiased}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+  .w{max-width:1440px;margin:0 auto;padding:0 44px}
+  header{padding:44px 0 36px;border-bottom:1px solid var(--bd)}
+  .ht{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px}
+  .htl{font-family:var(--sr);font-size:40px;font-weight:400;letter-spacing:-0.02em;line-height:1}
+  .htl em{font-style:italic;color:var(--ac)}
+  .hm{text-align:right;font-family:var(--mn);font-size:11px;color:var(--t3)}
+  .cx{display:grid;grid-template-columns:1.5fr 1fr 1.5fr 1fr;gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:6px;overflow:hidden}
+  .ci{background:var(--sf);padding:14px 18px}
+  .cl{font-family:var(--mn);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+  .cv{font-size:13px;color:var(--t2)}
+  nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--bd)}
+  .ni{display:flex;overflow-x:auto}
+  .tb{padding:14px 22px;font-family:var(--mn);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s}
+  .tb:hover{color:var(--t2)}
+  .tb.on{color:var(--tx);border-bottom-color:var(--ac)}
+  .tcc{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;margin-left:6px;background:var(--s3);border-radius:8px;font-size:9px}
+  .tb.on .tcc{background:var(--ad);color:var(--ac)}
+  .pn{display:none;padding:36px 0 56px;animation:fu .25s ease}
+  .pn.on{display:block}
+  @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:28px}
+  .st{font-family:var(--sr);font-size:26px}
+  .ss{font-family:var(--mn);font-size:11px;color:var(--t3)}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+  .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+  .gf{grid-column:1/-1}
+  .c{background:var(--sf);border:1px solid var(--bd);border-radius:7px;padding:22px;transition:border-color .15s}
+  .c:hover{border-color:var(--bl)}
+  .ch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+  .tg{font-family:var(--mn);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:3px}
+  .tr{background:var(--rdd);color:var(--rd);border:1px solid var(--rd)}
+  .ty{background:var(--yd);color:var(--yl);border:1px solid var(--yl)}
+  .tgr{background:var(--gd);color:var(--gn);border:1px solid var(--gn)}
+  .tbl{background:var(--bld);color:var(--bl2);border:1px solid var(--bl2)}
+  .tp{background:var(--pd);color:var(--pp);border:1px solid var(--pp)}
+  .tc2{background:var(--cd);color:var(--cn);border:1px solid var(--cn)}
+  .tn{background:var(--s3);color:var(--t3);border:1px solid var(--bd)}
+  .cd{font-family:var(--mn);font-size:11px;color:var(--t3)}
+  .ct{font-size:15px;font-weight:500;margin-bottom:9px;line-height:1.4}
+  .cb{font-size:13.5px;color:var(--t2);line-height:1.65;margin-bottom:14px}
+  .ca{font-family:var(--mn);font-size:11.5px;color:var(--ac);padding-top:10px;border-top:1px solid var(--bd)}
+  table.t2{width:100%;border-collapse:collapse}
+  .t2 th{font-family:var(--mn);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:10px 14px;text-align:left;border-bottom:1px solid var(--bd);font-weight:400}
+  .t2 td{padding:12px 14px;border-bottom:1px solid var(--bd);font-size:13px}
+  .t2 tr:hover td{background:var(--s2)}
+  .nm{font-weight:500;color:var(--tx)}
+  .rx{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid var(--bd);border-radius:7px;overflow:hidden;margin-bottom:14px}
+  .rc{padding:22px}
+  .rc:nth-child(1){background:var(--gd);border-right:1px solid var(--bd)}
+  .rc:nth-child(2){background:var(--yd);border-right:1px solid var(--bd)}
+  .rc:nth-child(3){background:var(--rdd)}
+  .rh{font-family:var(--mn);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+  .rc:nth-child(1) .rh{color:var(--gn)} .rc:nth-child(2) .rh{color:var(--yl)} .rc:nth-child(3) .rh{color:var(--rd)}
+  .dt{width:6px;height:6px;border-radius:50%}
+  .rc:nth-child(1) .dt{background:var(--gn)} .rc:nth-child(2) .dt{background:var(--yl)} .rc:nth-child(3) .dt{background:var(--rd)}
+  .ri{padding:8px 0;border-bottom:1px solid var(--bd);font-size:13px;color:var(--t2);line-height:1.5}
+  .ri:last-child{border-bottom:none}
+  .ri strong{color:var(--tx);font-weight:500;display:block;margin-bottom:2px}
+  .sc{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .scc{background:var(--sf);border:1px solid var(--bd);border-radius:7px;padding:24px;position:relative;overflow:hidden}
+  .scc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+  .sa::before{background:var(--gn)} .sb::before{background:var(--ac)} .sd::before{background:var(--yl)} .se::before{background:var(--rd)}
+  .sp{font-family:var(--mn);font-size:28px;font-weight:300;color:var(--t3);line-height:1;margin-bottom:4px}
+  .sn{font-size:16px;font-weight:500;margin-bottom:6px}
+  .sdd{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:16px}
+  .stg{border-top:1px solid var(--bd);padding-top:14px}
+  .str{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12.5px;color:var(--t2)}
+  .td{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;border:1.5px solid var(--bl)}
+  .td.f{background:var(--gn);border-color:var(--gn)} .td.n{background:var(--yl);border-color:var(--yl)}
+  .tl{position:relative;padding-left:30px}
+  .tl::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--bd)}
+  .tli{position:relative;padding-bottom:24px}
+  .tli::before{content:'';position:absolute;left:-27px;top:7px;width:8px;height:8px;border-radius:50%;border:2px solid var(--bl);background:var(--bg)}
+  .tli.hi::before{border-color:var(--ac);background:var(--ac)}
+  .tli.now::before{border-color:var(--gn);background:var(--gn);box-shadow:0 0 8px var(--gn)}
+  .tli.rd::before{border-color:var(--rd);background:var(--rd)}
+  .tld{font-family:var(--mn);font-size:11px;color:var(--t3);margin-bottom:4px}
+  .tlt{font-size:13.5px;color:var(--t2);line-height:1.55}
+  .tlt strong{color:var(--tx);font-weight:500}
+  .km{background:var(--sf);border:1px solid var(--bd);border-radius:7px;padding:28px;text-align:center;margin-bottom:14px}
+  .kml{font-family:var(--mn);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+  .kmv{font-family:var(--sr);font-size:48px;font-weight:400;line-height:1;margin-bottom:6px}
+  .kms{font-family:var(--mn);font-size:13px;color:var(--t3)}
+  /* Sub-tabs inside ecosystem */
+  .sub-bar{display:flex;gap:0;border-bottom:1px solid var(--bd);margin-bottom:24px}
+  .sub-tab{padding:10px 18px;font-family:var(--mn);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap}
+  .sub-tab:hover{color:var(--t2)} .sub-tab.on{color:var(--tx);border-bottom-color:var(--pp)}
+  .sub-pn{display:none;animation:fu .2s ease} .sub-pn.on{display:block}
+
+  .rv{opacity:0;transform:translateY(10px);animation:r .4s ease forwards}
+  .rv:nth-child(1){animation-delay:.04s}.rv:nth-child(2){animation-delay:.08s}.rv:nth-child(3){animation-delay:.12s}.rv:nth-child(4){animation-delay:.16s}.rv:nth-child(5){animation-delay:.2s}
+  @keyframes r{to{opacity:1;transform:translateY(0)}}
+  .ft{border-top:1px solid var(--bd);padding:20px 0;margin-top:36px;font-family:var(--mn);font-size:11px;color:var(--t3);display:flex;justify-content:space-between}
+  @media(max-width:1100px){.g3,.g4{grid-template-columns:1fr 1fr}.rx{grid-template-columns:1fr}.rc{border-right:none!important;border-bottom:1px solid var(--bd)}}
+  @media(max-width:800px){.w{padding:0 20px}.g2,.g3,.g4,.sc{grid-template-columns:1fr}.cx{grid-template-columns:1fr 1fr}.htl{font-size:28px}}
+</style>
+</head>
+<body>
+
+<div class="w">
+<header>
+  <div class="ht">
+    <h1 class="htl">Tech <em>Radar</em></h1>
+    <div class="hm">Updated 18 Mar 2026<br>Context: Enterprise retail workforce management · UK</div>
+  </div>
+  <div class="cx">
+    <div class="ci"><div class="cl">Domain Context</div><div class="cv">Enterprise retail · workforce operations · management layer · UK grocery as primary lens</div></div>
+    <div class="ci"><div class="cl">Technology Stack</div><div class="cv">OpenAI · Google · Anthropic · Deepgram · Open source (DeepSeek, Qwen, Llama)</div></div>
+    <div class="ci"><div class="cl">Capabilities of Interest</div><div class="cv">Agentic workflows · Voice/STT · Multilingual NLP · Data extraction · Scheduling · Sentiment</div></div>
+    <div class="ci"><div class="cl">This Dashboard</div><div class="cv" style="color:var(--ac)">Technology intelligence only. Product decisions are made elsewhere.</div></div>
+  </div>
+</header>
+</div>
+
+<nav><div class="w ni">
+  <button class="tb on" onclick="go('p1')">What's Possible<span class="tcc">3</span></button>
+  <button class="tb" onclick="go('p2')">What Changed<span class="tcc">6</span></button>
+  <button class="tb" onclick="go('p3')">Cost Trajectory<span class="tcc">5</span></button>
+  <button class="tb" onclick="go('p4')">Ecosystem Map<span class="tcc">8</span></button>
+  <button class="tb" onclick="go('p5')">Tech Scenarios<span class="tcc">4</span></button>
+  <button class="tb" onclick="go('p6')">Capability Timeline<span class="tcc">1</span></button>
+</div></nav>
+
+<div class="w">
+
+<!-- ============ TAB 1: WHAT'S POSSIBLE NOW ============ -->
+<div class="pn on" id="p1">
+  <div class="sh"><h2 class="st">What's Possible Now</h2><span class="ss">Current technology capability for retail workforce operations · March 2026</span></div>
+  <div class="rx rv">
+    <div class="rc">
+      <div class="rh"><span class="dt"></span>Production-Ready</div>
+      <div class="ri"><strong>Structured data extraction</strong>From WFM/POS/HR via API. 0.7% hallucination on grounded tasks. RAG reduces further by 71%.</div>
+      <div class="ri"><strong>Document summarisation / reporting</strong>Commodity. Frontier models within 2 Elo of each other. Multi-provider.</div>
+      <div class="ri"><strong>Scheduling optimisation</strong>Flash-tier, $0.50/MTok. Constraint satisfaction. Mature.</div>
+      <div class="ri"><strong>Compliance rule checking</strong>Bounded rules (employment law, HACCP, SSP). GPT-5 structured output. High reliability.</div>
+      <div class="ri"><strong>Classification / triage</strong>99.3% task completion on structured classification benchmarks.</div>
+      <div class="ri"><strong>Full-context analysis (1M tokens)</strong>Sonnet 4.6: flat $3/$15, &lt;5% degradation. Gemini 3 Pro: 1M (10M preview).</div>
+    </div>
+    <div class="rc">
+      <div class="rh"><span class="dt"></span>Functional — needs design care</div>
+      <div class="ri"><strong>Voice STT for mobile workers</strong>Deepgram Nova-3: sub-300ms. Canary: 5.63% WER. Multilingual streaming: ~14.5% WER, 99+ langs. Noisy environments untested.</div>
+      <div class="ri"><strong>Multilingual NLP (PL, RO, HI, UR)</strong>Qwen 3.5: 200+ langs. GPT-5.2: BLEU 65–73 European. Multi-engine routing is 2026 standard.</div>
+      <div class="ri"><strong>Sentiment analysis across languages</strong>Drops for sarcasm, code-switching, cultural context. Domain fine-tuning helps.</div>
+      <div class="ri"><strong>5–8 step agentic workflows</strong>87% at 5+ steps. Doubling rate possibly accelerating (7→4 months per METR). MCP: 6,400+ servers (Feb 2026). Human-in-the-loop required.</div>
+      <div class="ri"><strong>Persistent memory</strong>ChatGPT + Claude both offer cross-session. Simple facts/preferences, not relational.</div>
+    </div>
+    <div class="rc">
+      <div class="rh"><span class="dt"></span>Experimental — unreliable</div>
+      <div class="ri"><strong>12+ step autonomous workflows</strong>CUB benchmark: best 10.4%. 85% per step × 12 = ~14% end-to-end.</div>
+      <div class="ri"><strong>Computer use (WFM/POS interfaces)</strong>GPT-5.4 native: 75.0% OSWorld (beats human 72.4%). Claude CU: 72.5%. OpenAI CUA: 87% WebVoyager. Still unreliable for enterprise software.</div>
+      <div class="ri"><strong>Multimodal store intelligence</strong>Gemini Embedding 2: brand new (10 Mar). No production track record.</div>
+      <div class="ri"><strong>Predictive from sparse data</strong>Needs 50+ deployments minimum. Cold start problem.</div>
+      <div class="ri"><strong>Real-time voice conversation</strong>OpenAI Realtime API now GA (20% price cut, ~$0.06/min input). Gemini Live: 30 HD voices, 24 langs, 40% faster. Both support MCP. Session quality improving.</div>
+    </div>
+  </div>
+  <div class="c gf rv">
+    <div class="ch"><span class="tg tn">Key Limitations — apply across all</span></div>
+    <div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">Hallucination:</strong> Sub-1% grounded, but 6.4% legal, 23–64% medical. Reasoning models worse on open-ended: o3 33%, o4-mini 48%. 34% more confident when wrong. Mathematically proven: cannot fully eliminate under current architectures.<br><br><strong style="color:var(--tx)">Context degradation:</strong> "Lost in the middle": beginning/end 85–95%, middle 76–82%. Sonnet 4 best: &lt;5% drop. Test at actual length.<br><br><strong style="color:var(--tx)">Agentic math:</strong> 85% × 10 steps = 20%. Only 8.6% of companies have agents in production. Design for failure.<br><br><strong style="color:var(--tx)">Sycophancy:</strong> GPT-4o rolled back for agreeableness. Models tell you what you want to hear.</div>
+  </div>
+</div>
+
+<!-- ============ TAB 2: WHAT CHANGED ============ -->
+<div class="pn" id="p2">
+  <div class="sh"><h2 class="st">What Changed</h2><span class="ss">Last 30 days · threshold crossings and significant shifts</span></div>
+  <div class="g2 rv">
+    <div class="c"><div class="ch"><span class="tg tr">Major Shift</span><span class="cd">5 Mar</span></div><div class="ct">GPT-5.4 launches with native computer use — 75% OSWorld, beats human experts</div><div class="cb">1.05M context, 5 reasoning levels, 33% fewer factual errors vs 5.2. Native screen interaction at $2.50/$15 (Pro: $30/$180). Mar 17: Mini ($0.75/$4.50) and Nano ($0.20/$1.25) follow.</div><div class="ca">Threshold: computer use crosses human-expert level on structured benchmarks.</div></div>
+    <div class="c"><div class="ch"><span class="tg tr">Major Shift</span><span class="cd">13 Mar</span></div><div class="ct">Anthropic: 1M tokens flat $3/$15, no surcharge</div><div class="cb">Long-context premium eliminated. Full context window default architecture for moderate datasets (&lt;200K tokens cheaper than RAG). Structural cost advantage for document-heavy workloads.</div><div class="ca">Threshold: "full context" moves from premium to default.</div></div>
+  </div>
+  <div class="g2 rv">
+    <div class="c"><div class="ch"><span class="tg tr">Major Shift</span><span class="cd">17 Mar</span></div><div class="ct">Workday launches "Sana for Workday" — AI native across all modules</div><div class="cb">300+ skills, available to all customers via Flex Credits at no extra licensing. Illuminate Frontline Agent: text-based shift swaps, 90% reduction in manager time on staffing. Built on acquired Sana Labs ($1.1B) + Paradox. Direct threat to WFM-adjacent startups.</div><div class="ca">Platform signal: WFM incumbent shipping autonomous agents, not copilots.</div></div>
+    <div class="c"><div class="ch"><span class="tg ty">Significant</span><span class="cd">10 Mar</span></div><div class="ct">Gemini Embedding 2 — first natively multimodal embeddings</div><div class="cb">Text/image/video/audio/PDF → single vector space, 100+ languages. #1 on MTEB English (68.32). Cohere Embed 4 (Jan) also went multimodal with 128K context. The embedding landscape has shifted.</div><div class="ca">New capability: cross-modal semantic search in one model.</div></div>
+  </div>
+  <div class="g2 rv">
+    <div class="c"><div class="ch"><span class="tg ty">Significant</span><span class="cd">Feb–Mar</span></div><div class="ct">NVIDIA acquires Groq (~$20B) · Cerebras lands $10B OpenAI deal + AWS partnership</div><div class="cb">Inference hardware war escalating. Groq 3 LPU: 1,500 tok/sec for agentic AI. Cerebras WSE-3 on AWS Bedrock (Mar 13). B200/GB200 in volume production (Feb 5). Vera Rubin announced for H2 2026. Inference overtaking training as primary compute workload.</div><div class="ca">Infrastructure: custom silicon for inference is now a multi-billion dollar battleground.</div></div>
+    <div class="c"><div class="ch"><span class="tg ty">Significant</span><span class="cd">4 Feb</span></div><div class="ct">Dayforce taken private by Thoma Bravo for $12.3B</div><div class="cb">Major WFM vendor going private. 500+ person AI division building Dayforce AI Workspace with scheduling, analytics, and content agents. Private ownership enables faster AI pivots without quarterly pressure. Watch for aggressive product moves.</div><div class="ca">WFM landscape restructuring: consolidation accelerating.</div></div>
+  </div>
+  <div class="g2 rv">
+    <div class="c"><div class="ch"><span class="tg tbl">Trend</span></div><div class="ct">Agentic doubling rate may be accelerating: 7 months → 4 months</div><div class="cb">METR's 2024–2025 data suggests faster than original 7-month trend. MIT Technology Review (Feb 5) published methodological critiques — wide error bars. But direction is clear: tasks AI agents can autonomously complete continue growing exponentially. CUB benchmark top: still only 10.4%.</div></div>
+    <div class="c"><div class="ch"><span class="tg tbl">Trend</span></div><div class="ct">Open source gap: ~40 Elo, code at parity, 13-week closure rate</div><div class="cb">MiniMax M2.5: 80.2% SWE-bench. Qwen 3.5: 88.4% GPQA. Nemotron 3 Super: #1 DeepResearch Bench. DeepSeek V4 expected April (1T+ params). Enterprise OS adoption: 23%→67% YoY. Parity for ~90% of tasks projected mid-2027.</div></div>
+  </div>
+</div>
+
+<!-- ============ TAB 3: COST TRAJECTORY ============ -->
+<div class="pn" id="p3">
+  <div class="sh"><h2 class="st">Cost Trajectory</h2><span class="ss">Pricing, threshold crossings, and what becomes affordable when</span></div>
+  <div class="g3 rv">
+    <div class="km"><div class="kml">Cost decline rate</div><div class="kmv" style="color:var(--gn)">~50×/yr</div><div class="kms">Median per-token for equivalent capability</div></div>
+    <div class="km"><div class="kml">Cheapest frontier inference</div><div class="kmv" style="color:var(--ac)">$0.02</div><div class="kms">Mistral Nemo input/MTok · GPT-5.4 Nano at $0.20</div></div>
+    <div class="km"><div class="kml">Price spread</div><div class="kmv">1000×</div><div class="kms">$0.02 (Nemo) ↔ $30.00 (GPT-5.4 Pro)</div></div>
+  </div>
+  <div class="c gf rv" style="margin-bottom:14px">
+    <div class="ch"><span class="tg tn">Threshold Crossings — when cost unlocks new capability classes</span></div>
+    <table class="t2">
+      <thead><tr><th>Threshold</th><th>When</th><th>Unlocks</th><th>Retail ops relevance</th></tr></thead>
+      <tbody>
+        <tr><td class="nm">$2–5/MTok</td><td>2024</td><td>Coding assistants, summarisation, support copilots</td><td>First viable store-level AI tools</td></tr>
+        <tr><td class="nm">$0.25–1/MTok</td><td>2025–26</td><td>Agents, full doc processing, voice AI, legal/clinical</td><td style="color:var(--gn)">Current sweet spot. Most ops features viable.</td></tr>
+        <tr><td class="nm">$0.03–0.10/MTok</td><td style="color:var(--ac)">NOW (Nano)</td><td>BPO replacement, universal tutoring, real-time translation</td><td style="color:var(--ac)">Always-on per-worker agents. Continuous processing.</td></tr>
+        <tr><td class="nm">&lt;$0.01/MTok</td><td>2028 proj.</td><td>AI in every interaction. Cost ≈ zero.</td><td>AI default in every store process.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="g2 rv">
+    <div class="c"><div class="ch"><span class="tg ty">Critical</span></div><div class="ct">Output tokens: 70%+ of agentic cost</div><div class="cb">Output 3–10× more expensive than input. Agentic workflow (14K in / 7K out) on Sonnet: input $0.042, output $0.105. Route by output intensity, not input volume.</div></div>
+    <div class="c"><div class="ch"><span class="tg ty">Critical</span></div><div class="ct">Inference = only 30–50% of total AI spend</div><div class="cb">Engineering 15–25%, RAG infra 15–25%, eval 5–10%, fine-tuning 5–10%, data prep 5–10%, monitoring 3–8%. Inference deflates 50×/yr. Engineering does not.</div></div>
+  </div>
+  <div class="g2 rv">
+    <div class="c"><div class="ch"><span class="tg tgr">Discount Mechanisms</span></div><div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">Batch API:</strong> 50% off (OpenAI, Anthropic). <strong>Flex Processing (OpenAI):</strong> additional 50% off. <strong>Prompt caching:</strong> 50–90% on cache hits. <strong>Stacking batch+cache:</strong> Opus 4.6 effective input drops to $0.25/MTok (95% off list). <strong>Cloud markup:</strong> Bedrock/Azure: same per-token but 15–40% higher total.</div></div>
+    <div class="c"><div class="ch"><span class="tg tgr">Model Routing</span></div><div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">Non-optional for production.</strong> 1000× price spread. <strong>OpenRouter</strong> ($500M valuation, $100M+ annualised spend) and <strong>Martian</strong> lead routing. Google Vertex AI Model Optimizer offers native dynamic routing. Default: Nano/Flash for 70–80%, frontier for complex 20%. Typical savings: 60–85%.</div></div>
+  </div>
+</div>
+
+<!-- ============ TAB 4: ECOSYSTEM MAP ============ -->
+<div class="pn" id="p4">
+  <div class="sh"><h2 class="st">Ecosystem Map</h2><span class="ss">Models, infrastructure, frameworks, tools — the full technology stack</span></div>
+
+  <div class="sub-bar" id="sub-bar-eco">
+    <button class="sub-tab on" onclick="subgo('eco','e1')">Frontier Models</button>
+    <button class="sub-tab" onclick="subgo('eco','e2')">Open Source Models</button>
+    <button class="sub-tab" onclick="subgo('eco','e3')">Inference & Infrastructure</button>
+    <button class="sub-tab" onclick="subgo('eco','e4')">Agent Frameworks & Integration</button>
+    <button class="sub-tab" onclick="subgo('eco','e5')">Voice & Audio Stack</button>
+    <button class="sub-tab" onclick="subgo('eco','e6')">RAG, Embeddings & Retrieval</button>
+    <button class="sub-tab" onclick="subgo('eco','e7')">Edge & On-Device</button>
+    <button class="sub-tab" onclick="subgo('eco','e8')">WFM & HR Incumbents</button>
+  </div>
+
+  <!-- E1: Frontier -->
+  <div class="sub-pn on" id="e1">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Frontier Closed-Source Models — March 2026</span></div>
+      <table class="t2"><thead><tr><th>Provider</th><th>Model</th><th>Strengths</th><th>Input/MTok</th><th>Context</th><th>Key Signal</th></tr></thead><tbody>
+        <tr><td class="nm">OpenAI</td><td>GPT-5.4 (Mar 5)</td><td>Native computer use (75% OSWorld), 5 reasoning levels, 33% fewer errors</td><td>$2.50</td><td>1.05M</td><td style="color:var(--ac)">Pro tier: $30/$180. Computer use beats humans.</td></tr>
+        <tr><td class="nm">OpenAI</td><td>GPT-5.4 Nano (Mar 17)</td><td>Budget frontier. Described 76K photos for $52.</td><td>$0.20</td><td>1.05M</td><td style="color:var(--ac)">1000× cheaper than Pro tier.</td></tr>
+        <tr><td class="nm">Google</td><td>Gemini 3.1 Pro (Feb 19)</td><td>GPQA 94.3%, ARC-AGI-2 77.1% — potential benchmark leader</td><td>$2.00</td><td>1M+</td><td>Flash-Lite at $0.25/$1.50. Best cost/performance ratio.</td></tr>
+        <tr><td class="nm">Anthropic</td><td>Claude Opus 4.6 (Feb 5)</td><td>Arena #1, 80.8% SWE-bench, 14.5hr sessions</td><td>$5.00</td><td>1M flat</td><td style="color:var(--ac)">1M context no surcharge. Batch+cache: $0.25 effective.</td></tr>
+        <tr><td class="nm">Anthropic</td><td>Claude Sonnet 4.6 (Feb 17)</td><td>79.6% SWE-bench, Agent Teams (2–16)</td><td>$3.00</td><td>1M flat</td><td>Default for free/Pro users. Near-Opus intelligence.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="g2 rv">
+      <div class="c"><div class="ch"><span class="tg tp">Pattern</span></div><div class="ct">Every provider becoming an application company</div><div class="cb">OpenAI: Shopping, Health, Codex, Apps. Anthropic: Cowork, Chrome, Code. Google: NotebookLM, Jules, Firebase Studio. Competing directly with own API customers. "SaaSpocalypse": ~$285B wiped.</div></div>
+      <div class="c"><div class="ch"><span class="tg tp">Pattern</span></div><div class="ct">Multi-model declared but adoption concentrated</div><div class="cb">Anthropic ~40% enterprise LLM share, OpenAI ~27%, Google ~21%. Enterprises mostly 1–2 providers. Declaring "multi-model" but in practice standardising. Platform risk is real for API-dependent products.</div></div>
+    </div>
+  </div>
+
+  <!-- E2: Open Source -->
+  <div class="sub-pn" id="e2">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Open Source Model Families</span></div>
+      <table class="t2"><thead><tr><th>Family</th><th>Key Models</th><th>License</th><th>Strengths</th><th>Risks</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="nm">DeepSeek</td><td>V3.2 (94.2% MMLU), R1</td><td style="color:var(--gn)">MIT</td><td>Most consequential. $5.9M training cost. $0.028/MTok cached.</td><td style="color:var(--rd)">Geopolitical: banned US federal (HR 1121). V4 expected April, 1T+ params.</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">Alibaba Qwen</td><td>Qwen 3.5 (88.4% GPQA), Small series (Mar 1–3)</td><td style="color:var(--gn)">Apache 2.0</td><td>9B: GPQA Diamond 81.7, runs 16GB RAM. 200+ langs. #1 embeddings. Monthly releases.</td><td>China origin — enterprise perception</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">Meta Llama</td><td>Llama 4 Scout (17B/109B), Maverick</td><td style="color:var(--yl)">Custom</td><td>1.2B+ downloads. Scout: 10M context. Early fusion multimodal.</td><td style="color:var(--rd)">EU ban for ALL multimodal models. 700M MAU threshold.</td><td style="color:var(--yl)">Mixed</td></tr>
+        <tr><td class="nm">Mistral AI</td><td>Large 3 (675B MoE), Small 4 (Mar)</td><td style="color:var(--gn)">Apache 2.0</td><td>European sovereignty. Small 4: unified instruct/reasoning/coding in one model.</td><td>Smaller ecosystem</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">NVIDIA</td><td>Nemotron 3 Super (GTC, Mar)</td><td style="color:var(--gn)">Permissive</td><td>120B/12B active. #1 DeepResearch Bench. Ultra (frontier) targeting H1.</td><td>New entrant, ecosystem building</td><td style="color:var(--yl)">New</td></tr>
+        <tr><td class="nm">Google Gemma</td><td>Gemma 3n E4B (GPT-4-level in 3GB)</td><td style="color:var(--yl)">Custom</td><td>Small-model segment. 200M+ downloads, 60K+ variants.</td><td style="color:var(--rd)">Google can restrict unilaterally.</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">Microsoft Phi</td><td>Phi-4-reasoning 14B</td><td style="color:var(--gn)">MIT</td><td>Competes with DeepSeek R1 671B at fraction of size.</td><td>Narrow: reasoning-focused</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">MiniMax</td><td>M2.5 (80.2% SWE-bench)</td><td style="color:var(--gn)">Open</td><td>Code at parity with Opus 4.6 (80.9%). Best OS code model.</td><td>Less ecosystem support</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">InternVL</td><td>InternVL3-78B (72.2% MMMU)</td><td style="color:var(--gn)">Open</td><td>Best OS multimodal. Gap: 72.2% vs Gemini Pro 79%.</td><td>Vision-only strength</td><td style="color:var(--yl)">Maturing</td></tr>
+      </tbody></table>
+    </div>
+    <div class="g2 rv">
+      <div class="c"><div class="ch"><span class="tg tgr">Key Dynamic</span></div><div class="ct">Gap closes in ~13 weeks per frontier release (was 27 weeks a year ago)</div><div class="cb">OS achieves ~90% of closed performance at release, then catches up. Enterprise OS adoption: 23% → 67% YoY. Chatbot Arena gap: ~80 → ~40 Elo. Projection: functional parity for ~90% of tasks by mid-2027. Closed retains edge in conversational polish benchmarks don't capture.</div></div>
+      <div class="c"><div class="ch"><span class="tg ty">Licensing Matters</span></div><div class="ct">Apache 2.0 and MIT = safe. Everything else has gotchas.</div><div class="cb"><strong style="color:var(--gn)">Safe:</strong> Apache 2.0 (Qwen, Mistral) — full freedom + patent grant + EU AI Act exemptions. MIT (DeepSeek, Phi) — maximally permissive, no patent grant. <strong style="color:var(--rd)">Risk:</strong> Llama (EU ban, MAU cap). Gemma (unilateral changes). Cohere (non-commercial). By strict OSAID: almost none qualify as "open source." EU AI Act Article 53(2): only qualifying OS gets transparency exemptions.</div></div>
+    </div>
+    <div class="c gf rv">
+      <div class="ch"><span class="tg tp">Fine-Tuning & Customisation</span></div>
+      <div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">QLoRA is default:</strong> 80–90% of full fine-tuning quality at 17% memory. 8B on RTX 4090, $2–10, 2–6 hours. <strong>GRPO replacing RLHF</strong> — now works with QLoRA via Unsloth at 90% less VRAM. Extensions: DAPO (diversity), RO-GRPO (MoE routing), RLVR (automated verifiable rewards). <strong>Fine-tuned OS 8B matches generic GPT-4</strong> on narrow tasks. <strong>Distillation:</strong> use DeepSeek (MIT) or Qwen (Apache 2.0) as teachers — OpenAI/Anthropic ToS prohibit distillation.</div>
+    </div>
+  </div>
+
+  <!-- E3: Infrastructure -->
+  <div class="sub-pn" id="e3">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Inference Infrastructure</span></div>
+      <table class="t2"><thead><tr><th>Tool</th><th>Type</th><th>Performance</th><th>Status</th><th>Note</th></tr></thead><tbody>
+        <tr><td class="nm">vLLM v0.17.1</td><td>Self-hosted serving</td><td>~12.5K tok/sec on H100 (8B)</td><td style="color:var(--gn)">Production standard</td><td>Broadest compatibility. Mar 11 release.</td></tr>
+        <tr><td class="nm">SGLang</td><td>Self-hosted serving</td><td>~16.2K tok/sec (+29% vs vLLM)</td><td style="color:var(--gn)">Major contender</td><td style="color:var(--ac)">Powers 400K+ GPUs (xAI, AMD, NVIDIA).</td></tr>
+        <tr><td class="nm">TGI (HuggingFace)</td><td>Self-hosted serving</td><td>—</td><td style="color:var(--rd)">Maintenance mode</td><td>Dec 2025. HF recommends vLLM or SGLang.</td></tr>
+        <tr><td class="nm">llama.cpp</td><td>Edge / local</td><td>60–120 tok/sec on M3/M4 (7–8B)</td><td style="color:var(--gn)">Production</td><td>Foundation for local inference.</td></tr>
+        <tr><td class="nm">Ollama v0.18</td><td>Local platform</td><td>Wraps llama.cpp</td><td style="color:var(--gn)">De facto local</td><td>165K GitHub stars (surpassed PyTorch). New: Ollama Cloud.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Managed API & Inference Providers</span></div>
+      <table class="t2"><thead><tr><th>Provider</th><th>Key Offering</th><th>Pricing / Scale</th><th>Key Development</th></tr></thead><tbody>
+        <tr><td class="nm">Together AI</td><td>Broadest OS catalogue. Production SLAs.</td><td>Scout: $0.10/$0.30. ~$300M annualised.</td><td>$554M total funding.</td></tr>
+        <tr><td class="nm">NVIDIA/Groq</td><td>LPU silicon — speed</td><td>Scout: $0.11/$0.34</td><td style="color:var(--ac)">Acquired by NVIDIA ~$20B. Groq 3 LPU: 1,500 tok/sec.</td></tr>
+        <tr><td class="nm">Cerebras</td><td>Wafer-scale WSE-3</td><td>$10B OpenAI deal (Jan)</td><td style="color:var(--ac)">AWS Bedrock partnership (Mar 13). IPO expected Apr at ~$6.4B.</td></tr>
+        <tr><td class="nm">Fireworks AI</td><td>13T+ tokens daily</td><td>$4B valuation, $254M raised</td><td>Microsoft Foundry partnership (Mar 11).</td></tr>
+        <tr><td class="nm">DeepSeek (direct)</td><td>V3.2</td><td>$0.28/$0.42 (cached: $0.028)</td><td>70–100× cheaper than GPT-5 equivalent.</td></tr>
+        <tr><td class="nm">AWS Bedrock / Azure</td><td>~100 models each</td><td>Same per-token, 15–40% higher total</td><td>Enterprise compliance. Both adding custom silicon.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="g2 rv">
+      <div class="c"><div class="ch"><span class="tg tp">Decision Framework</span></div><div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">&lt;1B tokens/month:</strong> Any API cheaper than self-hosting. <strong>1–10B:</strong> Hosted OS APIs optimal (Together, Groq). <strong>&gt;10B with MLOps:</strong> Self-hosting (vLLM/SGLang) may win. <strong>Air-gapped:</strong> Self-hosted OS only. <strong>Consensus:</strong> start closed → validate → migrate high-volume to OS. Build abstraction layers from day one. Self-hosting breakeven: 50K+ daily requests with predictable load. Startup first-year self-hosting: $350K–$500K.</div></div>
+      <div class="c"><div class="ch"><span class="tg tp">Cost Optimisation Stack</span></div><div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">Hardware era shift:</strong> B200/GB200 in volume production (Feb 5, TSMC Arizona). 25× energy efficiency per token. FP4 precision: 15–30× throughput. <strong>GPU cloud pricing:</strong> H100: $2.72–3.50/hr (down 64–75%); H200: $2.50–4.31/hr; B200: $5.58/hr (limited). <strong>Quantization:</strong> INT4/FP4 = 60–70% cost reduction. <strong>MoE:</strong> Llama 4 Scout 17B/109B = frontier at fraction of compute. Self-hosting breakeven: ~200M+ tokens/day (8B) or ~70M+ (70B).</div></div>
+    </div>
+  </div>
+
+  <!-- E4: Agent Frameworks -->
+  <div class="sub-pn" id="e4">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Agent Frameworks</span></div>
+      <table class="t2"><thead><tr><th>Framework</th><th>Positioning</th><th>Strengths</th><th>Scale</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="nm">OpenAI Agents SDK v0.12.5</td><td>Fastest start</td><td>&lt;20 lines to working agent. GPT-5.4 computer use + MCP support.</td><td>Growing</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">LangChain / LangGraph 1.0</td><td>Production control</td><td>$1.25B valuation. 90M monthly downloads, 118K GitHub stars.</td><td style="color:var(--ac)">35% of Fortune 500</td><td style="color:var(--gn)">Standard</td></tr>
+        <tr><td class="nm">CrewAI</td><td>Multi-agent</td><td>Role-based agents. 450M+ workflows/month.</td><td style="color:var(--ac)">60% of US Fortune 500</td><td style="color:var(--gn)">Production</td></tr>
+      </tbody></table>
+    </div>
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Integration Standards & Protocols</span></div>
+      <table class="t2"><thead><tr><th>Standard</th><th>What It Does</th><th>Scale</th><th>Status</th><th>Watch For</th></tr></thead><tbody>
+        <tr><td class="nm">MCP (Linux Foundation)</td><td>AI-to-tool connections. "USB-C for AI."</td><td>6,400+ servers (Feb 2026), 97M+ SDK dl/mo</td><td style="color:var(--gn)">Industry standard</td><td style="color:var(--ac)">2026 roadmap (Mar 5): transport evolution, agent lifecycle, enterprise auth (SSO).</td></tr>
+        <tr><td class="nm">A2A (Google → Linux Foundation)</td><td>Agent-to-agent across orgs</td><td>150+ supporting orgs. v0.3.</td><td style="color:var(--yl)">Early production</td><td>Tyson Foods, Gordon Food Service deployments. "Use MCP for tools, A2A for agents."</td></tr>
+        <tr><td class="nm">Google UCP</td><td>Universal Commerce Protocol — AI agent purchasing</td><td>Co-developed: Shopify, Walmart, Target</td><td style="color:var(--yl)">New</td><td style="color:var(--ac)">Agents discover, negotiate, execute purchases. Directly relevant to retail.</td></tr>
+        <tr><td class="nm">Cloudflare Code Mode</td><td>Agents write code to call tools on demand</td><td>Orders of magnitude token savings</td><td style="color:var(--yl)">Emerging</td><td>~240K → ~1K tokens for API operations. Architectural shift.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="c gf rv">
+      <div class="ch"><span class="tg tc2">Convergence Signal</span></div>
+      <div class="ct">Flat-rate 1M context + MCP 10K+ servers = potential death of enterprise middleware</div>
+      <div class="cb" style="margin-bottom:0">Single AI agent can ingest org's entire knowledge base through MCP connectors and reason across it in one context window. Replaces complex multi-system architectures costing millions. $18B+ iPaaS market (Informatica, MuleSoft, Boomi) faces structural disruption. For retail: single agent connecting WFM + POS + HR + comms through MCP instead of custom integrations per system. 18–24 months from mainstream, but architecturally possible now.</div>
+    </div>
+  </div>
+
+  <!-- E5: Voice -->
+  <div class="sub-pn" id="e5">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Voice & Audio Technology Stack</span></div>
+      <table class="t2"><thead><tr><th>Layer</th><th>Tool</th><th>Key Metric</th><th>Price / Funding</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="nm" rowspan="4" style="vertical-align:top">STT / Transcription</td><td>NVIDIA Canary-Qwen-2.5B</td><td>5.63% WER, #1 HF Open ASR Leaderboard</td><td>Open source</td><td style="color:var(--gn)">Best accuracy (EN)</td></tr>
+        <tr><td>Deepgram Nova-3</td><td>~5.26% WER, sub-300ms TTFT</td><td style="color:var(--ac)">$0.0043/min. $130M Series C, $1.3B val (Jan)</td><td style="color:var(--gn)">Best real-time</td></tr>
+        <tr><td>Google Chirp 3</td><td>~11.6% WER, 125+ languages</td><td>Varies</td><td style="color:var(--gn)">Best multilingual</td></tr>
+        <tr><td>AssemblyAI Universal-2</td><td>~14.5% WER, 99+ langs streaming</td><td>$0.015/min</td><td style="color:var(--gn)">Good balance</td></tr>
+        <tr><td class="nm" rowspan="5" style="vertical-align:top">TTS / Speech Gen</td><td>ElevenLabs Eleven v3</td><td>70+ languages, 75ms latency</td><td style="color:var(--ac)">$500M Series D, $11B val (Feb 4). $330M ARR.</td><td style="color:var(--gn)">Market leader</td></tr>
+        <tr><td>Cartesia Sonic-3</td><td>40–90ms TTFA — fastest commercial</td><td>—</td><td style="color:var(--gn)">Speed leader</td></tr>
+        <tr><td>Deepgram Aura-2</td><td>90ms TTFB for voice agents</td><td>$1.3B valuation</td><td style="color:var(--gn)">Agent-optimised</td></tr>
+        <tr><td>Sesame CSM-1B (OS)</td><td>Human-parity naturalness in CMOS studies</td><td>Apache 2.0</td><td style="color:var(--ac)">New — conversational speech breakthrough</td></tr>
+        <tr><td>CosyVoice2 / Fish Speech V1.5 (OS)</td><td>150ms streaming / #1 TTS Arena (Elo 1339)</td><td>Open source</td><td style="color:var(--gn)">Best OS TTS</td></tr>
+        <tr><td class="nm" rowspan="2" style="vertical-align:top">Real-time Voice</td><td>OpenAI Realtime API (GA)</td><td>MCP support, image input, SIP calling</td><td>~$0.06/min input, $0.24/min output</td><td style="color:var(--gn)">GA, 20% price cut</td></tr>
+        <tr><td>Google Gemini Live</td><td>30 HD voices, 24 langs, 40% faster</td><td>Live speech-to-speech translation, 30 langs</td><td style="color:var(--gn)">Major update Mar</td></tr>
+        <tr><td class="nm">Talent Acqui-hire</td><td colspan="2" style="color:var(--ac)">Google acqui-hired Hume AI talent (Jan 22). CEO Alan Cowen → DeepMind. Signal: emotional intelligence in voice = key frontier.</td><td>—</td><td style="color:var(--yl)">Watch</td></tr>
+      </tbody></table>
+    </div>
+    <div class="c gf rv">
+      <div class="ch"><span class="tg tp">Voice Stack Insight</span></div>
+      <div class="ct">STT is commodity for English. Multilingual STT is functional. Real-time conversation is GA but fragile.</div>
+      <div class="cb" style="margin-bottom:0">Open source (NVIDIA Canary, CosyVoice2) rivals commercial for accuracy. Key gap: accented English + noisy environments (retail floors, warehouses) — no benchmark data, needs real-world testing. For retail workforce: voice-first interface is technically viable today for English, near-viable for Polish/Romanian/Hindi with ~14.5% WER streaming. Real-time voice conversation (bidirectional) still has session quality issues and latency — better for short interactions than long coaching sessions.</div>
+    </div>
+  </div>
+
+  <!-- E6: RAG & Embeddings -->
+  <div class="sub-pn" id="e6">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">RAG, Embeddings & Retrieval</span></div>
+      <table class="t2"><thead><tr><th>Component</th><th>Tool / Model</th><th>Key Metric</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="nm" rowspan="4" style="vertical-align:top">Embedding Models</td><td style="color:var(--ac)">Gemini Embedding 001</td><td>MTEB English 68.32 — #1 overall. Natively multimodal.</td><td style="color:var(--gn)">#1 overall</td></tr>
+        <tr><td>Qwen3-Embedding-8B</td><td>Apache 2.0. Strong multilingual. Near #1.</td><td style="color:var(--gn)">OS leader</td></tr>
+        <tr><td>Cohere Embed 4 (Jan)</td><td>Interleaved text+image, 128K context, $0.12/MTok</td><td style="color:var(--gn)">Multimodal</td></tr>
+        <tr><td>Mixedbread Wholembed v3 (Mar 12)</td><td>Late interaction: text, code, audio, vision. 1B+ docs, 500+ QPS.</td><td style="color:var(--yl)">New</td></tr>
+        <tr><td class="nm" rowspan="3" style="vertical-align:top">RAG Architecture</td><td>Standard RAG</td><td>71% hallucination reduction. Mature but 40–60% fail to production.</td><td style="color:var(--gn)">Mature</td></tr>
+        <tr><td>GraphRAG</td><td>Microsoft-integrated. Expensive ($5–20/MB corpus). LazyGraphRAG: lower cost.</td><td style="color:var(--yl)">Growing</td></tr>
+        <tr><td style="color:var(--ac)">Agentic RAG</td><td>57%+ of enterprises in production. Market: $1.94B → $9.86B by 2030.</td><td style="color:var(--gn)">Dominant paradigm</td></tr>
+        <tr><td class="nm" rowspan="3" style="vertical-align:top">Vector Databases</td><td>Pinecone</td><td>$860M valuation. Claims 70% of Fortune 500.</td><td style="color:var(--gn)">Market leader</td></tr>
+        <tr><td>pgvector (PostgreSQL)</td><td>471 QPS at 99% recall on 50M vectors. No separate infra needed.</td><td style="color:var(--ac)">Challenging dedicated DBs</td></tr>
+        <tr><td>Qdrant / Weaviate / Chroma</td><td>Qdrant: Rust, $28M. Weaviate: hybrid search. Chroma: dev-focused.</td><td style="color:var(--gn)">Production</td></tr>
+        <tr><td class="nm">Orchestration</td><td>LangChain / LangGraph 1.0</td><td>$1.25B val. 90M monthly downloads. 118K GitHub stars. 35% of F500.</td><td style="color:var(--gn)">Standard</td></tr>
+      </tbody></table>
+    </div>
+    <div class="g2 rv">
+      <div class="c"><div class="ch"><span class="tg tp">2026 Consensus</span></div><div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">RAG</strong> for volatile facts and large knowledge bases. <strong>Long context</strong> for holistic analysis under ~200K tokens (now cheaper with flat pricing). <strong>Fine-tuning</strong> for stable behaviours. <strong>40–60% of RAG implementations still fail</strong> to reach production due to retrieval quality and governance. The architecture choice is no longer "RAG vs long context" — it's "which combination for which data type."</div></div>
+      <div class="c"><div class="ch"><span class="tg tc2">Emerging</span></div><div class="ct">Multimodal embeddings change retrieval fundamentally</div><div class="cb" style="margin-bottom:0">Gemini Embedding 2: one model, one vector space for all modalities. Previously: separate embedding models, separate indices, complex fusion. This enables "search everything" — text, photos, audio, video, PDFs in one query. Brand new, no production track record. But architecturally significant: if it works, it simplifies the entire retrieval stack.</div></div>
+    </div>
+  </div>
+
+  <!-- E7: Edge -->
+  <div class="sub-pn" id="e7">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">Edge & On-Device AI</span></div>
+      <table class="t2"><thead><tr><th>Model / Platform</th><th>Size / Requirement</th><th>Performance</th><th>Relevance</th></tr></thead><tbody>
+        <tr><td class="nm">Qwen 3.5-9B (Mar 1)</td><td>16GB RAM</td><td style="color:var(--ac)">GPQA Diamond 81.7 — comparable to 10× larger models</td><td>Apache 2.0. 30+ tok/sec on AMD Ryzen AI. Production-ready edge reasoning.</td></tr>
+        <tr><td class="nm">Gemma 3n E4B</td><td>~3GB GPU RAM</td><td>GPT-4-level. PLE architecture.</td><td style="color:var(--ac)">Co-developed with Qualcomm, MediaTek, Samsung. Mobile-first.</td></tr>
+        <tr><td class="nm">Llama 4 Scout (INT4)</td><td>Single H100</td><td>17B active / 109B total MoE</td><td>Frontier quality at edge server. But: EU multimodal ban.</td></tr>
+        <tr><td class="nm">Phi-4-reasoning 14B</td><td>Consumer GPU</td><td>Competes with DeepSeek R1 671B</td><td>Complex reasoning at small footprint. MIT license.</td></tr>
+        <tr><td class="nm">Ollama v0.18</td><td>Any machine</td><td>165K GitHub stars (surpassed PyTorch)</td><td style="color:var(--ac)">De facto local AI platform. New: Ollama Cloud for hybrid.</td></tr>
+        <tr><td class="nm">Apple Foundation Models</td><td>iOS/macOS</td><td>~3B on-device via Swift</td><td>Free inference for developers. 2B+ potential endpoints.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="g2 rv">
+      <div class="c"><div class="ch"><span class="tg tc2">Hardware Acceleration</span></div><div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">Mobile:</strong> Qualcomm Snapdragon X2 Plus: 80 TOPS NPU (PCs). Snapdragon 8 Elite Gen 5: 37% faster NPU (Galaxy S26). MediaTek Dimensity 9500: 45 TOPS + transformer accelerator. <strong style="color:var(--tx)">Edge servers:</strong> NVIDIA Jetson Thor (Blackwell): 2,070 FP4 TFLOPS, 128GB — 7.5× leap over Orin. MediaTek Genio: retail IoT at 10 TOPS GenAI. <strong style="color:var(--tx)">2B+ smartphones</strong> can now run local small models.</div></div>
+      <div class="c"><div class="ch"><span class="tg tp">Retail Edge Deployments Appearing</span></div><div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">Advantech DS-015:</strong> LLMs on Jetson Orin for in-store kiosks, no cloud. <strong>Lenovo Think Edge 2nd-gen</strong> (Euroshop 2026): loss prevention + inventory. <strong>Cisco Unified Edge:</strong> AI hologram assistants at NRF 2026. The trade-off: less capable than cloud but instant response, no data leaving device, works in low-connectivity (warehouses, basements). Best for: classification, lookups, voice transcription. Escalate to cloud for complex reasoning.</div></div>
+    </div>
+  </div>
+
+  <!-- E8: WFM & HR Incumbents -->
+  <div class="sub-pn" id="e8">
+    <div class="c gf rv" style="margin-bottom:14px">
+      <div class="ch"><span class="tg tn">WFM & HR Incumbents — AI Moves (Updated March 2026)</span></div>
+      <table class="t2"><thead><tr><th>Player</th><th>AI Move</th><th>UK Grocery</th><th>AI Depth</th><th>Key Development</th></tr></thead><tbody>
+        <tr><td class="nm">UKG / Kronos</td><td>Bryte AI Agents: Promotion, Compliance, Payroll agents. Google Cloud partnership (Oct 25).</td><td style="color:var(--rd)">Deep</td><td style="color:var(--yl)">Agentic now</td><td style="color:var(--ac)">2,500+ AI models across 80K orgs. Gemini-powered.</td></tr>
+        <tr><td class="nm">Workday</td><td style="color:var(--ac)">Sana for Workday (Mar 17): 300+ skills, all customers. Illuminate Frontline Agent: text shift swaps.</td><td style="color:var(--t3)">Low</td><td style="color:var(--rd)">Deep</td><td style="color:var(--ac)">90% reduction in manager staffing time. Paradox ATS: 3.5-day avg hire.</td></tr>
+        <tr><td class="nm">SAP SuccessFactors</td><td>5 Joule agents GA May 2026: Performance, Career, HR Service, Intelligence, Payroll. New Workforce Scheduling.</td><td style="color:var(--yl)">Some</td><td style="color:var(--yl)">Growing</td><td>"Collision course with UKG" — Josh Bersin. Joule: 80% of tasks, 11 langs.</td></tr>
+        <tr><td class="nm">Dayforce (Thoma Bravo)</td><td>Taken private $12.3B (Feb 4). 500+ AI team. AI Workspace: scheduling, analytics, content agents.</td><td style="color:var(--yl)">Some</td><td style="color:var(--yl)">Building</td><td>Private ownership = faster AI pivots. Watch for aggressive moves.</td></tr>
+        <tr><td class="nm">ADP</td><td>Persona-based AI agents (Jan 28). AI agent marketplace (Mar 2).</td><td style="color:var(--t3)">Low</td><td style="color:var(--yl)">Growing</td><td>Data advantage: 1.1M clients, 42M wage earners.</td></tr>
+        <tr><td class="nm">Oracle Retail</td><td>14 new "AI workforce optimization" roles (60 days). Building.</td><td style="color:var(--rd)">Deep (35%)</td><td style="color:var(--yl)">Building</td><td>12–18 months to GA. NRF 2026 AI retail push.</td></tr>
+        <tr><td class="nm">Legion Technologies</td><td>90+ innovations (Jan 12). Autonomous AI Assistants, productivity scheduling.</td><td style="color:var(--yl)">Entering</td><td style="color:var(--yl)">AI-native</td><td style="color:var(--ac)">Won Wilson James UK (Mar 10). Dollar Tree. $50M SVB facility.</td></tr>
+        <tr><td class="nm">Quinyx</td><td>IDC MarketScape Leader for EMEA AI-Enabled WFM (2026).</td><td style="color:var(--yl)">UK presence</td><td style="color:var(--yl)">Growing</td><td>European WFM alternative. Watch for UK grocery wins.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="g2 rv">
+      <div class="c"><div class="ch"><span class="tg tr">Litigation Risk</span></div>
+        <div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">Mobley v. Workday</strong> (Mar 2026): collective certification, potentially millions of applicants over 40 alleging AI screening discrimination. <strong>Eightfold AI class action</strong> (Jan 20): scraping 1B+ workers, scoring without disclosure. Led by former EEOC Chair. <strong>Illinois H.B. 3773</strong> (effective Jan 1, 2026): prohibits discriminatory AI in hiring. <strong>Colorado AI Act</strong> (effective Jun 1, 2026): impact assessments + transparency. Signal: workforce AI litigation is accelerating. Any product touching hiring, scheduling, or performance evaluation faces growing legal exposure.</div>
+      </div>
+      <div class="c"><div class="ch"><span class="tg tp">Pattern</span></div><div class="ct">Every WFM vendor is shipping agents, not copilots</div><div class="cb" style="margin-bottom:0">UKG: autonomous Bryte agents. Workday: Illuminate Frontline Agent. SAP: 5 Joule agents. ADP: agent marketplace. Dayforce: AI Workspace. The floor has shifted: copilot-level assistance is now table stakes. Autonomous task completion is the new competitive benchmark. NRF 2026: every vendor specifically targeted retail/frontline. WFM market: ~$8.5–12B growing at 9–11% CAGR. Pricing shifting from per-seat to consumption-based (Workday Flex Credits).</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 5: TECH SCENARIOS ============ -->
+<div class="pn" id="p5">
+  <div class="sh"><h2 class="st">Technology Scenarios</h2><span class="ss">Four technology futures — 12–18 month horizon</span></div>
+  <div class="sc rv">
+    <div class="scc sa"><div class="sp">~40%</div><div class="sn">Steady Acceleration</div><div class="sdd">Capabilities on trend. Cost ~10×/yr. Agentic 90%+ for 12-step by Q4 2026. OS 95%+ parity. Regulation moderate.</div><div class="stg"><div class="str"><span class="td f"></span>Inference cost dropping 50×/yr — confirmed</div><div class="str"><span class="td f"></span>Agentic doubling ~7 months — holding</div><div class="str"><span class="td f"></span>OS gap closing ~13 weeks — confirmed</div><div class="str"><span class="td n"></span>EU AI Act moderate enforcement — tracking</div><div class="str"><span class="td"></span>No architectural breakthrough disrupting trajectory</div></div></div>
+    <div class="scc sb"><div class="sp">~25%</div><div class="sn">Capability Jump</div><div class="sdd">Agentic jumps faster. By mid-2027: 12+ step autonomous at 95%+. Computer use reliable for enterprise software. "AI operates, human supervises."</div><div class="stg"><div class="str"><span class="td f"></span>SWE-bench &gt;80% — confirmed</div><div class="str"><span class="td f"></span>Computer use beats human experts — confirmed (GPT-5.4: 75% vs human 72.4%)</div><div class="str"><span class="td n"></span>Agentic 12-step &gt;90% — approaching (doubling possibly accelerating to 4mo)</div><div class="str"><span class="td"></span>Agent-to-agent in production — not yet (A2A: 150+ orgs, early)</div><div class="str"><span class="td"></span>Major retailer deploys autonomous ops AI — not yet</div></div></div>
+    <div class="scc sd"><div class="sp">~20%</div><div class="sn">Regulatory Tightening</div><div class="sdd">EU strict enforcement. UK follows. Workforce AI incident or litigation cascade. Only compliance-first deployments survive.</div><div class="stg"><div class="str"><span class="td n"></span>EU AI Act high-risk Aug 2026 — imminent. Only 8/27 states have authorities.</div><div class="str"><span class="td n"></span>UK Employment Rights Act commenced Jan 2026 — trade union reforms Feb 18</div><div class="str"><span class="td n"></span>USDAW secured TUC Congress support for AI oversight (Sep 2025) — position forming</div><div class="str"><span class="td n"></span>Mobley v. Workday class action entering collective certification — millions of plaintiffs</div><div class="str"><span class="td"></span>Major UK grocery AI incident — not yet</div></div></div>
+    <div class="scc se"><div class="sp">~15%</div><div class="sn">Capability Plateau</div><div class="sdd">Models stop meaningfully improving. Agentic stalls &lt;90%. "Scaling wall." AI = powerful tool, not autonomous operator.</div><div class="stg"><div class="str"><span class="td"></span>Benchmarks plateau across 2+ generations — not yet</div><div class="str"><span class="td"></span>ARC-AGI-2 &lt;50% for 12+ months — monitoring (45% today)</div><div class="str"><span class="td"></span>Major lab pivots from scaling — not yet</div></div></div>
+  </div>
+  <div class="c gf rv">
+    <div class="ch"><span class="tg tp">Current Position</span></div>
+    <div class="ct">Scenario A: 3/5 triggers confirmed. But Regulatory Tightening (C) has upgraded: 4/5 triggers now active.</div>
+    <div class="cb" style="margin-bottom:0">Core technology trends all holding: costs falling, capabilities improving, OS closing gap. Key upgrade since last assessment: <strong>Regulatory scenario has materially strengthened.</strong> USDAW secured TUC Congress backing for AI oversight. Mobley v. Workday class action entering collective certification. EU enforcement date approaching with only 8/27 authorities designated. Computer use crossing human-expert level (GPT-5.4) accelerates both Scenario A and B timelines. The most consequential question remains: agentic reliability for complex workflows — but regulatory risk is now a closer second.</div>
+  </div>
+</div>
+
+<!-- ============ TAB 6: TIMELINE ============ -->
+<div class="pn" id="p6">
+  <div class="sh"><h2 class="st">Capability Timeline</h2><span class="ss">18-month forward view — milestones and threshold crossings</span></div>
+  <div class="c gf rv">
+    <div class="ch"><span class="tg tn">Forward View</span></div>
+    <div class="ct" style="margin-bottom:20px">Technology milestones relevant to retail workforce operations</div>
+    <div class="tl">
+      <div class="tli now"><div class="tld">NOW — Mar 2026</div><div class="tlt"><strong>Baseline.</strong> GPT-5.4 native computer use (75% OSWorld). Sonnet 4.6 at 1M flat. Agentic 87% at 5-step. Voice STT sub-300ms ($0.004/min). Multimodal embeddings (#1 MTEB). OS at ~90% of closed (13-week gap closure). MCP 6,400+ servers. B200/GB200 in volume production. Workday Sana launched. Every WFM vendor shipping agents.</div></div>
+      <div class="tli hi"><div class="tld">Apr 2026</div><div class="tlt"><strong>DeepSeek V4 expected</strong> (1T+ params, MIT license). Budget models approaching $0.02/MTok. SAP 5 Joule agents GA (May). Colorado AI Act effective Jun 1. NVIDIA Vera Rubin sampling. Agentic doubling possibly accelerating (7→4 months). Self-hosting economics improving with Blackwell.</div></div>
+      <div class="tli rd"><div class="tld">Aug 2026</div><div class="tlt"><strong>EU AI Act high-risk enforcement.</strong> Workforce monitoring, scheduling, performance eval must comply. Only 8/27 member states have designated authorities. Digital Omnibus may delay if standards aren't ready. Emotion recognition in workplaces already banned (Feb 2025). Fines: €35M or 7% of global turnover. Compliance-by-design becomes non-negotiable.</div></div>
+      <div class="tli hi"><div class="tld">Q3–Q4 2026</div><div class="tlt"><strong>Projected: agentic 90%+ for 8–12 step.</strong> Critical threshold: AI assists → AI operates. Computer use ~85% for web apps. OS ~95% of closed. Budget inference ~$0.01/MTok. MCP agent-to-agent may enter early production. Edge models handle moderate complexity locally.</div></div>
+      <div class="tli"><div class="tld">Q1 2027</div><div class="tlt"><strong>EU full enforcement + UK secondary legislation.</strong> Fines up to €35M / 7% revenue. Regulatory landscape crystallises. Self-hosting OS models becomes practical at mid-volume (vLLM/SGLang mature, cost-effective).</div></div>
+      <div class="tli"><div class="tld">Mid 2027</div><div class="tlt"><strong>OS functional parity for ~90% of tasks.</strong> Self-hosting mainstream. Edge 9B models handle complex tasks. Computer use agents may replace integration work. Budget inference ≤$0.01/MTok. The technology stack is fundamentally cheaper, more capable, and more distributed than today.</div></div>
+      <div class="tli"><div class="tld">H2 2027</div><div class="tlt"><strong>Scenario divergence.</strong> A: incremental, 95%+ agentic, near-zero cost, mature tools. B: autonomous multi-step ops, computer use replacing RPA. C: only compliant architectures survive. D: current capabilities ≈ ceiling, optimisation focus.</div></div>
+    </div>
+  </div>
+  <div class="g2 rv">
+    <div class="c"><div class="ch"><span class="tg tgr">Near-Certain</span></div><div class="cb" style="margin-bottom:0">● Inference costs decline ~10×/yr<br>● Models improve in agentic workflows<br>● Multimodal becomes commodity<br>● Every provider builds vertical apps<br>● Context windows grow<br>● OS reaches frontier parity ~90% by mid-2027<br>● MCP becomes universal standard<br>● Edge models become production-grade</div></div>
+    <div class="c"><div class="ch"><span class="tg ty">Uncertain but High-Impact</span></div><div class="cb" style="margin-bottom:0">● When agentic crosses 90% for 12+ step production<br>● Whether computer use replaces integrations (now at 75%, was 72.5%)<br>● How strictly EU AI Act enforced (only 8/27 authorities ready)<br>● Whether workforce AI litigation cascades (Mobley v. Workday, Eightfold)<br>● Whether UK adds workforce-specific AI regulation (USDAW pushing)<br>● Whether post-transformer architecture emerges<br>● Whether major AI incident triggers policy response<br>● Whether on-device models reach "good enough" for enterprise</div></div>
+  </div>
+  <div class="c gf rv">
+    <div class="ch"><span class="tg tc2">The One Question</span></div>
+    <div class="ct">Two questions now share the top spot</div>
+    <div class="cb" style="margin-bottom:0"><strong style="color:var(--tx)">1. When does agentic reliability cross 90% for complex structured workflows?</strong> Below 90%: technology helps humans. Above 90%: technology does the work. Current trajectory: Q4 2026 for 8–12 step. GPT-5.4 computer use crossing human-expert level is a leading indicator.<br><br><strong style="color:var(--tx)">2. Will workforce AI litigation and regulation freeze enterprise adoption?</strong> Mobley v. Workday (millions of plaintiffs), Eightfold class action, EU AI Act Aug 2026, Colorado AI Act Jun 2026, USDAW push. If a cascade occurs, only compliance-first architectures survive. This was previously a distant risk — it is now an active one.</div>
+  </div>
+</div>
+
+</div>
+
+<div class="w"><div class="ft"><span>Tech Radar v4.2 · PCL Technology Intelligence · Updated with deep research 19 Mar 2026</span><span>Next update: 26 Mar 2026</span></div></div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  event.target.closest('.tb').classList.add('on');
+  document.querySelectorAll(`#${id} .rv`).forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
+}
+function subgo(group,id){
+  const parent=document.getElementById(id).parentElement;
+  parent.querySelectorAll('.sub-pn').forEach(p=>p.classList.remove('on'));
+  parent.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  event.target.closest('.sub-tab').classList.add('on');
+  document.querySelectorAll(`#${id} .rv`).forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
+}
+</script>
+</body>
+</html>
